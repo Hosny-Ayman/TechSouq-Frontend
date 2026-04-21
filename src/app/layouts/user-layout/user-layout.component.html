@@ -1,0 +1,15 @@
+@if (isBrowser) {
+  <div class="min-h-screen flex flex-col">
+    <app-user-nav></app-user-nav>
+
+    <main class="flex-grow">
+      <router-outlet></router-outlet>
+    </main>
+
+    <app-user-footer></app-user-footer>
+  </div>
+} @else {
+  <div class="flex justify-center items-center min-h-[70vh]">
+    <i class="pi pi-spin pi-spinner text-4xl text-[#ffa41c]"></i>
+  </div>
+}
