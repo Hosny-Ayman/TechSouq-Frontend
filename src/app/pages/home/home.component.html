@@ -2,41 +2,32 @@
   <aside
     class="w-full lg:w-64 border-b lg:border-r lg:border-b-0 border-gray-200 pb-4 lg:pb-0 lg:pr-4 flex-shrink-0"
   >
-    <ul class="flex flex-col gap-3">
-      <li>
-        <a
-          href="/category/womans-fashion"
-          class="flex items-center justify-between text-black hover:text-primary transition-colors cursor-pointer"
-        >
-          <span>Woman's Fashion</span>
-          <i class="pi pi-angle-right"></i>
-        </a>
-      </li>
-      <li>
-        <a
-          href="/category/mens-fashion"
-          class="flex items-center justify-between text-black hover:text-primary transition-colors cursor-pointer"
-        >
-          <span>Men's Fashion</span>
-          <i class="pi pi-angle-right"></i>
-        </a>
-      </li>
-      <li>
-        <a
-          href="/category/electronics"
-          class="flex items-center text-black hover:text-primary transition-colors cursor-pointer"
-        >
-          <span>Electronics</span>
-        </a>
-      </li>
-      <li>
-        <a
-          href="/category/medicine"
-          class="flex items-center text-black hover:text-primary transition-colors cursor-pointer"
-        >
-          <span>Medicine</span>
-        </a>
-      </li>
+    <ul
+      class="flex flex-col gap-1 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar"
+    >
+      @for (category of allcategories; track category.id) {
+        <li>
+          <a
+            (click)="selectCategory(category.name)"
+            class="flex items-center justify-between px-3 py-2 rounded-md transition-all cursor-pointer group"
+            [ngClass]="
+              CatigourySearsh === category.name
+                ? 'text-[#ffa41c] bg-orange-50 font-bold'
+                : 'text-gray-700 hover:text-[#ffa41c] hover:bg-orange-50'
+            "
+          >
+            <span>{{ category.name }}</span>
+            <i
+              class="pi pi-angle-right text-xs opacity-50 group-hover:opacity-100"
+              [ngClass]="
+                CatigourySearsh === category.name
+                  ? 'text-[#ffa41c] opacity-100'
+                  : ''
+              "
+            ></i>
+          </a>
+        </li>
+      }
     </ul>
   </aside>
 
@@ -70,92 +61,231 @@
     </p-galleria>
   </div>
 </div>
-<div class="flex justify-end items-center px-4 mb-6 mt-4">
-  <div
-    class="relative cursor-pointer group hover:scale-110 transition-transform duration-300"
-  >
-    <div
-      class="bg-[#F5F5F5] p-3.5 rounded-full shadow-sm border border-gray-200 flex items-center justify-center"
-    >
-      <i class="pi pi-shopping-cart text-2xl text-gray-800"></i>
+
+<div class="my-10 px-4 max-w-7xl mx-auto">
+  <div class="flex justify-between items-end mb-8">
+    <div>
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-5 h-10 bg-[#db4444] rounded-md"></div>
+        <span class="text-[#db4444] font-bold text-lg">Categories</span>
+      </div>
+      <h2 class="text-3xl font-bold text-black tracking-wide">
+        Browse By Category
+      </h2>
     </div>
 
-    @if (cartItems && cartItems.length > 0) {
-      <span
-        class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full border-2 border-white shadow-md"
+    <div class="flex gap-2">
+      <button
+        (click)="prevCategoryPage()"
+        [disabled]="currentCategoryPage === 1"
+        class="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center transition-all duration-300"
+        [ngClass]="
+          currentCategoryPage === 1
+            ? 'opacity-50 cursor-not-allowed'
+            : 'hover:bg-[#ffa41c] hover:text-white cursor-pointer'
+        "
       >
-        {{ cartItems.length }}
-      </span>
+        <i class="pi pi-arrow-left text-lg"></i>
+      </button>
+
+      <button
+        (click)="nextCategoryPage()"
+        [disabled]="currentCategoryPage === totalCategoryPages"
+        class="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center transition-all duration-300"
+        [ngClass]="
+          currentCategoryPage === totalCategoryPages
+            ? 'opacity-50 cursor-not-allowed'
+            : 'hover:bg-[#ffa41c] hover:text-white cursor-pointer'
+        "
+      >
+        <i class="pi pi-arrow-right text-lg"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="flex gap-6 overflow-x-auto pb-6 pt-2 hide-scrollbar">
+    @for (categorie of allcategories; track categorie.id) {
+      <div
+        class="border border-gray-200 rounded-lg p-6 flex flex-col items-center justify-center cursor-pointer hover:border-[#ffa41c] hover:-translate-y-1 transition-all duration-300 w-40 h-40 flex-shrink-0"
+        [ngClass]="
+          CatigourySearsh === categorie.name
+            ? 'border-[#ffa41c] bg-orange-50 shadow-md'
+            : 'bg-white'
+        "
+        (click)="selectCategory(categorie.name)"
+      >
+        <img
+          [src]="categorie.imageUrl"
+          [alt]="categorie.name"
+          class="w-14 h-14 mb-4 object-contain transition-opacity"
+          [ngClass]="
+            CatigourySearsh === categorie.name
+              ? 'opacity-100'
+              : 'opacity-80 hover:opacity-100'
+          "
+        />
+        <span
+          class="font-medium text-[15px] text-center"
+          [ngClass]="
+            CatigourySearsh === categorie.name
+              ? 'text-[#ffa41c]'
+              : 'text-gray-800'
+          "
+        >
+          {{ categorie.name }}
+        </span>
+      </div>
     }
   </div>
 </div>
+
 <div
-  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 p-4 bg-white"
+  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 p-4 bg-gray-50"
 >
   @if (Products && Products.data && Products.data.data) {
     @for (product of Products.data.data; track product.id) {
       <div
-        class="flex flex-col bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow duration-200"
+        class="group flex flex-col h-full bg-white border border-gray-100 rounded-2xl hover:shadow-xl hover:border-gray-200 hover:-translate-y-1 transition-all duration-300 overflow-hidden relative"
       >
-        <div [routerLink]="['/product', product.id]">
-          <div
-            class="h-48 w-full flex justify-center items-center mb-4 cursor-pointer"
-          >
-            <img
-              [src]="
-                product.firstImage
-                  ? product.firstImage
-                  : 'https://placehold.co/400x400?text=No+Image'
-              "
-              [alt]="product.name"
-              class="max-h-full max-w-full object-contain"
-            />
+        <button
+          class="absolute top-3 right-3 z-20 w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors shadow-sm"
+        >
+          <i class="pi pi-heart"></i>
+        </button>
+
+        <div
+          [routerLink]="['/product', product.id]"
+          class="relative w-full h-52 bg-[#f8f9fa] p-6 flex justify-center items-center cursor-pointer overflow-hidden"
+        >
+          @if (product.stock === 0) {
+            <div
+              class="absolute inset-0 bg-white/60 backdrop-blur-[1px] z-10 flex items-center justify-center"
+            >
+              <span
+                class="bg-red-500 text-white font-bold px-3 py-1.5 rounded-lg text-sm transform -rotate-12 shadow-lg border border-white"
+              >
+                Out of Stock
+              </span>
+            </div>
+          }
+
+          <img
+            [src]="
+              product.firstImage
+                ? product.firstImage
+                : 'https://placehold.co/400x400?text=No+Image'
+            "
+            [alt]="product.name"
+            class="max-h-full max-w-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-110"
+            [ngClass]="{ 'opacity-50 grayscale': product.stock === 0 }"
+          />
+        </div>
+
+        <div class="p-4 flex flex-col flex-grow">
+          <div class="flex items-center gap-1 mb-2">
+            <div class="flex text-[#ffb822] text-[13px]">
+              @for (
+                item of [].constructor(product.totalReviews > 0 ? 5 : 0);
+                track $index
+              ) {
+                <i class="pi pi-star-fill"></i>
+              }
+            </div>
+            <span class="text-xs text-gray-400 font-medium ml-1"
+              >({{ product.averageRating }})</span
+            >
           </div>
 
           <h2
-            class="text-[15px] font-medium text-gray-900 line-clamp-3 mb-2 hover:text-[#c7511f] cursor-pointer"
+            [routerLink]="['/product', product.id]"
+            class="text-[15px] font-semibold text-gray-800 line-clamp-2 min-h-[44px] mb-3 leading-snug cursor-pointer group-hover:text-[#db4444] transition-colors"
             dir="auto"
           >
             {{ product.name }}
           </h2>
 
-          <div class="flex items-center gap-1 mb-2 cursor-pointer">
-            <div class="flex text-[#ffa41c] text-sm">
-              <i class="pi pi-star-fill"></i>
-              <i class="pi pi-star-fill"></i>
-              <i class="pi pi-star-fill"></i>
-              <i class="pi pi-star-fill"></i>
-              <i class="pi pi-star-half"></i>
-            </div>
-          </div>
-
-          <div class="flex items-baseline gap-1 mb-1">
-            <span class="text-xl font-bold text-gray-900">{{
-              product.price
-            }}</span>
-            <span class="text-sm font-bold text-gray-900">جنيه</span>
-          </div>
-
-          <div class="text-[13px] text-gray-800 mb-2">
-            off NBE Visa Signature Credit Cards 10%
-          </div>
-
-          <div class="text-[14px] text-gray-900 mb-4">توصيل مجاني</div>
-
           <div class="flex-grow"></div>
-        </div>
-        <div>
-          <button
-            class="w-full bg-[#ffd814] hover:bg-[#f7ca00] text-black font-medium py-2 px-4 rounded-full text-[13px] transition-colors shadow-sm"
-            (click)="addToCart({ productId: product.id, quantity: 1 })"
+
+          <div class="flex flex-wrap gap-2 mb-4 mt-2 min-h-[28px]">
+            @if (product.isFreeShipping) {
+              <span
+                class="bg-green-50 text-green-600 text-[11px] font-bold px-2.5 py-1 rounded-md flex items-center gap-1"
+              >
+                <i class="pi pi-check-circle text-[10px]"></i> شحن مجاني
+              </span>
+            }
+
+            @if (hasDiscount(product)) {
+              <span
+                class="bg-red-50 text-red-600 text-[11px] font-bold px-2.5 py-1 rounded-md flex items-center gap-1"
+              >
+                <i class="pi pi-tag text-[10px]"></i> خصم
+                {{ getDiscountPercentage(product) }}%
+              </span>
+            }
+          </div>
+
+          <div
+            class="flex items-end justify-between pt-4 border-t border-gray-100"
           >
-            Add To Cart
-          </button>
+            <div class="flex flex-col">
+              @if (hasDiscount(product)) {
+                <span class="text-xs text-gray-400 line-through mb-0.5"
+                  >{{ product.price }} ج.م</span
+                >
+                <div class="flex items-baseline gap-1 text-red-600">
+                  <span class="text-2xl font-extrabold tracking-tight">{{
+                    product.priceAfterDiscount
+                  }}</span>
+                  <span class="text-sm font-bold">ج.م</span>
+                </div>
+              } @else {
+                <div class="flex items-baseline gap-1 text-gray-900">
+                  <span class="text-2xl font-extrabold tracking-tight">{{
+                    product.price
+                  }}</span>
+                  <span class="text-sm font-bold">ج.م</span>
+                </div>
+              }
+            </div>
+
+            <button
+              [disabled]="product.stock === 0 || isProductInCart(product.id)"
+              [ngClass]="{
+                'bg-green-500 text-white cursor-default shadow-inner':
+                  isProductInCart(product.id),
+                'bg-gray-200 text-gray-400 cursor-not-allowed':
+                  product.stock === 0 && !isProductInCart(product.id),
+                'bg-gray-900 hover:bg-[#db4444] text-white active:scale-95 shadow-md':
+                  product.stock > 0 && !isProductInCart(product.id),
+              }"
+              class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300"
+              (click)="addToCart(product)"
+              [title]="
+                product.stock === 0
+                  ? 'Out of Stock'
+                  : isProductInCart(product.id)
+                    ? 'Already in Cart'
+                    : 'Add To Cart'
+              "
+            >
+              @if (isProductInCart(product.id)) {
+                <i class="pi pi-check text-lg"></i>
+              } @else if (product.stock === 0) {
+                <i class="pi pi-ban text-lg"></i>
+              } @else {
+                <i class="pi pi-shopping-bag text-lg"></i>
+              }
+            </button>
+          </div>
         </div>
       </div>
     }
   } @else {
-    <div class="col-span-full text-center text-gray-500 py-8">
+    <div
+      class="col-span-full text-center text-gray-500 py-12 font-medium bg-white rounded-2xl border border-gray-100"
+    >
+      <i class="pi pi-inbox text-5xl text-gray-300 block mb-3"></i>
       There is No Product
     </div>
   }
@@ -165,8 +295,8 @@
   <div class="flex justify-center mt-8 mb-8">
     <p-paginator
       (onPageChange)="onPageChange($event)"
-      [first]="(Products.data.currentPage - 1) * Products.data.pageSize"
-      [rows]="Products.data.pageSize"
+      [first]="(currentProductPage - 1) * productPageSize"
+      [rows]="productPageSize"
       [totalRecords]="Products.data.totalRecords"
       [rowsPerPageOptions]="[10, 20, 30]"
     >

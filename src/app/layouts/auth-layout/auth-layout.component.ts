@@ -1,4 +1,4 @@
-import { Component, inject, PLATFORM_ID } from '@angular/core';
+import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { AuthFooterComponent } from '../../components/auth-footer/auth-footer.component';
 import { MenubarModule } from 'primeng/menubar';
 import { AuthNavComponent } from '../../components/auth-nav/auth-nav.component';

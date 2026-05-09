@@ -94,6 +94,45 @@ export const routes: Routes = [
             (c) => c.CartComponent,
           ),
       },
+      {
+        path: 'Payment',
+        loadComponent: () =>
+          import('./components/payment/payment.component').then(
+            (c) => c.PaymentComponent,
+          ),
+      },
+      {
+        path: 'Profile',
+        loadComponent: () =>
+          import('./pages/profile/profile.component').then(
+            (c) => c.ProfileComponent,
+          ),
+        children: [
+          { path: '', redirectTo: 'MyProfile', pathMatch: 'full' },
+          {
+            path: 'MyProfile',
+            loadComponent: () =>
+              import('./components/my-profile/my-profile.component').then(
+                (c) => c.MyProfileComponent,
+              ),
+          },
+          {
+            path: 'Address',
+            loadComponent: () =>
+              import('./components/address/address.component').then(
+                (c) => c.AddressComponent,
+              ),
+          },
+
+          {
+            path: 'AddAddress/:id',
+            loadComponent: () =>
+              import('./components/add-address/add-address.component').then(
+                (c) => c.AddAddressComponent,
+              ),
+          },
+        ],
+      },
     ],
   },
 

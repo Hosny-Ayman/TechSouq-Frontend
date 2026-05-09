@@ -1,0 +1,23 @@
+/* لإخفاء شريط التمرير (Scrollbar) مع الحفاظ على القدرة على التمرير */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* سكرول بار رفيع وشيك زي بتاع المواقع الكبيرة */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #e5e7eb;
+  border-radius: 10px;
+}
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: #d1d5db; /* يغمق شوية لما تقف عليه */
+}

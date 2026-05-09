@@ -1,18 +1,47 @@
 <div class="card">
   <p-menubar [model]="items">
     <ng-template pTemplate="start">
-      <a class="text-2xl font-bold text-primary ml-2" routerLink="/Auth"
+      <a class="text-2xl font-bold text-[#ffa41c] ml-2" routerLink="/Auth"
         >TechSouq</a
       >
     </ng-template>
 
     <ng-template pTemplate="end">
-      <input
-        type="text"
-        pInputText
-        placeholder="What are you looking for..."
-        class="w-full sm:w-auto"
-      />
+      <div
+        class="relative flex items-center justify-end gap-5 mr-4 w-full sm:w-[350px] md:w-[450px] lg:w-[550px]"
+      >
+        <div class="relative w-full">
+          <i
+            class="pi pi-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg z-10"
+          ></i>
+          <input
+            type="text"
+            [(ngModel)]="searchWord"
+            (keyup.enter)="onSearch()"
+            (ngModelChange)="onInputClear($event)"
+            pInputText
+            placeholder="What are you looking for..."
+            class="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-[#ffa41c] focus:border-transparent focus:bg-white transition-all duration-300 placeholder-gray-400"
+          />
+        </div>
+
+        <a
+          routerLink="/Cart"
+          class="relative cursor-pointer group flex items-center"
+        >
+          <i
+            class="pi pi-shopping-cart text-2xl text-gray-700 group-hover:text-black transition-colors"
+          ></i>
+
+          @if (cartCount > 0) {
+            <span
+              class="absolute -top-2 -right-3 bg-[#ffa41c] text-white text-[11px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-md"
+            >
+              {{ cartCount }}
+            </span>
+          }
+        </a>
+      </div>
     </ng-template>
   </p-menubar>
 </div>

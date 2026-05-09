@@ -8,13 +8,9 @@
 
     <form
       [formGroup]="userData"
-      action=""
       class="flex flex-col gap-4"
       (submit)="submit()"
     >
-      <div>
-        <div class="card"></div>
-      </div>
       <p-inputGroup>
         <p-inputGroupAddon>
           <i class="pi pi-envelope"></i>
@@ -22,15 +18,17 @@
         <input
           formControlName="email"
           pInputText
+          type="email"
+          autocomplete="email"
           placeholder="Email"
           class="w-full text-center text-lg border border-gray-300 p-2 rounded focus:outline-none focus:border-blue-500"
         />
       </p-inputGroup>
 
-      <div class="validation-msg">
+      <div class="validation-msg min-h-[3rem] flex flex-col justify-start">
         @if (email?.touched && email?.dirty) {
           @if (email?.getError("required")) {
-            <div class="w-[95%] mx-auto mt-2">
+            <div class="w-[95%] mx-auto mt-1">
               <p-message
                 severity="error"
                 text="Email Is Required"
@@ -39,7 +37,7 @@
             </div>
           }
           @if (email?.getError("email")) {
-            <div class="w-[95%] mx-auto mt-2">
+            <div class="w-[95%] mx-auto mt-1">
               <p-message
                 severity="error"
                 text="Email Not Valid"
@@ -56,32 +54,20 @@
         </p-inputGroupAddon>
         <p-password
           [toggleMask]="true"
-          name="password"
           formControlName="password"
           placeholder="Password"
-          styleClass="w-full"
-          inputStyleClass="w-full text-center text-lg  border border-gray-300 p-2 rounded focus:outline-none focus:border-blue-500"
+          autocomplete="current-password"
+          [feedback]="false"
+          styleClass="w-full flex"
+          inputStyleClass="w-full text-center text-lg border border-gray-300 p-2 rounded focus:outline-none focus:border-blue-500"
         >
-          <ng-template pTemplate="header">
-            <h6>Pick a password</h6>
-          </ng-template>
-
-          <ng-template pTemplate="footer">
-            <p-divider />
-            <p class="mt-2">Suggestions</p>
-            <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
-              <li>At least one lowercase</li>
-              <li>At least one uppercase</li>
-              <li>At least one numeric</li>
-              <li>Minimum 8 characters</li>
-            </ul>
-          </ng-template>
         </p-password>
       </p-inputGroup>
-      <div class="validation-msg">
+
+      <div class="validation-msg min-h-[3rem] flex flex-col justify-start">
         @if (password?.dirty && password?.touched) {
           @if (password?.getError("required")) {
-            <div class="w-[95%] mx-auto mt-2">
+            <div class="w-[95%] mx-auto mt-1">
               <p-message
                 severity="error"
                 text="Password Is Required"
@@ -90,7 +76,7 @@
             </div>
           }
           @if (password?.getError("minlength")) {
-            <div class="w-[95%] mx-auto mt-2">
+            <div class="w-[95%] mx-auto mt-1">
               <p-message
                 severity="error"
                 text="Must be at Least 8 char"
@@ -98,46 +84,40 @@
               ></p-message>
             </div>
           }
-          @if (password?.getError("maxlength")) {
-            <div class="w-[95%] mx-auto mt-2">
+          @if (password?.getError("pattern")) {
+            <div class="w-[95%] mx-auto mt-1">
               <p-message
                 severity="error"
-                text="cannot exceed 20 char"
+                text="Must contain Uppercase, Lowercase, Number & Special Char"
                 styleClass="w-full justify-center"
               ></p-message>
             </div>
           }
         }
-        @if (password?.getError("pattern")) {
-          <div class="w-[95%] mx-auto mt-2">
-            <p-message
-              severity="error"
-              text="Password must contain at least one uppercase, lowercase, number, and special character"
-              styleClass="w-full flex justify-start"
-            ></p-message>
-          </div>
-        }
       </div>
 
       <button
-        class="w-full bg-primary text-white font-bold py-2 rounded hover:bg-blue-700"
+        class="w-full bg-primary text-white font-bold py-2 rounded hover:bg-blue-700 transition-colors"
         type="submit"
       >
         Login
       </button>
+
       <h4 class="text-center">
         <a routerLink="/Login" class="font-bold text-red-700 underline"
-          >Forget Passowrd</a
+          >Forget Password</a
         >
       </h4>
     </form>
   </div>
+
   <ngx-spinner
     bdColor="rgba(0, 0, 0, 0.8)"
     size="medium"
     color="#ff0000"
     type="triangle-skew-spin"
     [fullScreen]="true"
-    ><p style="color: white">Loading...</p></ngx-spinner
   >
+    <p style="color: white">Loading...</p>
+  </ngx-spinner>
 </div>

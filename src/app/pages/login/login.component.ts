@@ -23,6 +23,7 @@ import { Router } from '@angular/router';
 import { ILogin } from '../../../core/Interfaces/http';
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID, inject } from '@angular/core';
+import { CartService } from '../../../core/services/cart.service';
 
 @Component({
   selector: 'app-login',
@@ -65,6 +66,7 @@ export class LoginComponent implements OnInit {
     private _MyMessage: MessagesService,
     private _ngxSpinnerService: NgxSpinnerService,
     private _formBuilder: FormBuilder,
+    private _cart: CartService,
   ) {
     this.userData = _formBuilder.group({
       email: ['', [Validators.email, Validators.required]],
@@ -90,6 +92,20 @@ export class LoginComponent implements OnInit {
   }
 
   submit() {
+    const emailInput = document.querySelector(
+      'input[autocomplete="email"]',
+    ) as HTMLInputElement;
+    const passInput = document.querySelector(
+      '.p-password input',
+    ) as HTMLInputElement;
+
+    if (emailInput && emailInput.value) {
+      this.userData.patchValue({ email: emailInput.value });
+    }
+    if (passInput && passInput.value) {
+      this.userData.patchValue({ password: passInput.value });
+    }
+
     if (this.userData.valid) {
       this._ShowSpinner.show();
       this.signUp(this.userData.value);
@@ -102,24 +118,6 @@ export class LoginComponent implements OnInit {
   }
 
   signUp(formData: ILogin): void {
-    const finalDataToSedn = {
-      email: formData.email,
-      password: formData.password,
-    };
-
-    this._authService.login(formData).subscribe({
-      next: (respons: any) => {
-        console.log('Register Successfuly', respons);
-        this._MyMessage.showSuccess('Register Successfuly');
-        this._ShowSpinner.hide();
-        this._router.navigate(['/User']);
-      },
-      error: (err) => {
-        console.log('Login Failed', err);
-
-        this._MyMessage.showError('Unexpected Error Try Again Later');
-        this._ShowSpinner.hide();
-      },
-    });
+    this._authService.signUp(formData);
   }
 }

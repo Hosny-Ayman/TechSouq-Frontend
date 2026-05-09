@@ -1,0 +1,19 @@
+::ng-deep input:-webkit-autofill,
+::ng-deep input:-webkit-autofill:hover,
+::ng-deep input:-webkit-autofill:focus,
+::ng-deep input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  -webkit-text-fill-color: black !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+  height: 48px !important;
+  padding: 0.5rem 1rem !important;
+  font-size: 1.125rem !important;
+}
+
+::ng-deep .p-password input {
+  height: 48px !important;
+}
+
+::ng-deep .p-password-panel {
+  display: none !important;
+}

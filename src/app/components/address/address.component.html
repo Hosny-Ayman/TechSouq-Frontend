@@ -1,0 +1,82 @@
+<!-- /User/Profile/AddAddress -->
+<div
+  class="bg-white p-8 md:p-10 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100"
+>
+  <h2 class="text-2xl font-bold text-[#db4444] mb-8">My Address Book</h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <button
+      [routerLink]="['/User/Profile/AddAddress', 0]"
+      class="border-2 border-dashed border-gray-300 rounded-xl p-6 flex flex-col items-center justify-center text-gray-500 hover:border-[#db4444] hover:text-[#db4444] transition-all duration-300 min-h-[260px]"
+    >
+      <i class="pi pi-plus text-4xl mb-4"></i>
+      <span class="font-bold text-lg">Add Address</span>
+    </button>
+
+    @for (addr of myallAddresses; track addr.id) {
+      <div
+        class="border border-gray-200 rounded-xl flex flex-col justify-between min-h-[260px] shadow-sm hover:shadow-md transition-shadow overflow-hidden relative"
+      >
+        @if (addr.active) {
+          <div class="bg-gray-50 border-b border-gray-200 px-6 py-2">
+            <span class="text-[13px] font-medium text-gray-600"
+              >Default:
+              <span class="font-bold text-black font-serif"
+                >TechSouq</span
+              ></span
+            >
+          </div>
+        }
+
+        <div class="p-6 flex flex-col justify-between h-full">
+          <div>
+            <h4 class="font-bold text-gray-900 mb-1">
+              {{ addr.firstName }} {{ addr.lastName }}
+            </h4>
+            <p class="text-sm text-gray-600 mb-1">{{ addr.street }}</p>
+            <p class="text-sm text-gray-600 mb-1">
+              {{ addr.city }}, {{ addr.country }}
+            </p>
+            <p class="text-sm text-gray-600 font-medium mt-2">
+              Phone: {{ addr.phone }}
+            </p>
+          </div>
+
+          <div
+            class="flex flex-wrap items-center gap-3 mt-4 pt-4 border-t border-gray-100 text-sm"
+          >
+            <button
+              [routerLink]="['/User/Profile/AddAddress', addr.id]"
+              class="text-[#db4444] font-medium hover:underline"
+            >
+              Edit
+            </button>
+            <span class="text-gray-300">|</span>
+            <button
+              (click)="removeAddress(addr.id)"
+              class="text-gray-500 font-medium hover:underline"
+            >
+              Remove
+            </button>
+
+            @if (!addr.active) {
+              <span class="text-gray-300">|</span>
+              <button
+                (click)="setAsDefault(addr.id)"
+                class="text-blue-600 font-medium hover:underline"
+              >
+                Set as Default
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+    } @empty {
+      <div
+        class="col-span-1 md:col-span-1 lg:col-span-2 flex items-center justify-center p-6 text-gray-400 border border-transparent"
+      >
+        <p class="text-lg">No addresses found. Add one to get started!</p>
+      </div>
+    }
+  </div>
+</div>

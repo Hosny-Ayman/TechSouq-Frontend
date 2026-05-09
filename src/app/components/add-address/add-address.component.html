@@ -1,0 +1,191 @@
+<div
+  class="bg-white p-8 md:p-10 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 max-w-4xl"
+>
+  <div class="flex items-center gap-4 mb-8">
+    <a
+      routerLink="/User/Profile/Address"
+      class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-50 text-gray-500 hover:bg-[#db4444] hover:text-white transition-all duration-300 shadow-sm"
+    >
+      <i class="pi pi-arrow-left"></i>
+    </a>
+    <h2 class="text-2xl font-bold text-gray-800">Add New Address</h2>
+  </div>
+
+  <form
+    [formGroup]="addressForm"
+    (ngSubmit)="submitAddress()"
+    class="space-y-6"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-gray-600"
+          >First Name <span class="text-red-500">*</span></label
+        >
+        <input
+          type="text"
+          formControlName="firstName"
+          placeholder="e.g. Hosny"
+          class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-[#db4444]/20 focus:border-[#db4444] block p-4 transition-all outline-none"
+        />
+
+        <div class="validation-smg">
+          @if (
+            f["firstName"].invalid &&
+            (f["firstName"].dirty || f["firstName"].touched)
+          ) {
+            <p-message
+              severity="error"
+              text="Valid first name is required (min 3 chars)"
+              styleClass="w-full justify-start mt-1"
+            ></p-message>
+          }
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-gray-600"
+          >Last Name <span class="text-red-500">*</span></label
+        >
+        <input
+          type="text"
+          formControlName="lastName"
+          placeholder="e.g. Ayman"
+          class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-[#db4444]/20 focus:border-[#db4444] block p-4 transition-all outline-none"
+        />
+
+        <div class="validation-smg">
+          @if (
+            f["lastName"].invalid &&
+            (f["lastName"].dirty || f["lastName"].touched)
+          ) {
+            <p-message
+              severity="error"
+              text="Valid last name is required (min 3 chars)"
+              styleClass="w-full justify-start mt-1"
+            ></p-message>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label class="text-sm font-medium text-gray-600"
+        >Country / Region <span class="text-red-500">*</span></label
+      >
+      <select
+        formControlName="country"
+        class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-[#db4444]/20 focus:border-[#db4444] block p-4 transition-all outline-none appearance-none"
+      >
+        <option value="Egypt">Egypt</option>
+        <option value="Saudi Arabia">Saudi Arabia</option>
+        <option value="UAE">UAE</option>
+      </select>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label class="text-sm font-medium text-gray-600"
+        >Street Address <span class="text-red-500">*</span></label
+      >
+      <input
+        type="text"
+        formControlName="street"
+        placeholder="House number and street name"
+        class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-[#db4444]/20 focus:border-[#db4444] block p-4 transition-all outline-none"
+      />
+
+      <div class="validation-smg">
+        @if (
+          addressForm.get("street")?.invalid &&
+          (addressForm.get("street")?.dirty ||
+            addressForm.get("street")?.touched)
+        ) {
+          <p-message
+            severity="error"
+            text="Street address is required"
+            styleClass="w-full justify-start mt-1"
+          ></p-message>
+        }
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-gray-600"
+          >Town / City <span class="text-red-500">*</span></label
+        >
+        <input
+          type="text"
+          formControlName="city"
+          placeholder="e.g. Giza"
+          class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-[#db4444]/20 focus:border-[#db4444] block p-4 transition-all outline-none"
+        />
+
+        <div class="validation-smg">
+          @if (f["city"].invalid && (f["city"].dirty || f["city"].touched)) {
+            <p-message
+              severity="error"
+              text="City is required"
+              styleClass="w-full justify-start mt-1"
+            ></p-message>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-gray-600"
+          >Phone <span class="text-red-500">*</span></label
+        >
+        <input
+          type="tel"
+          formControlName="phone"
+          placeholder="01xxxxxxxxx"
+          class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-[#db4444]/20 focus:border-[#db4444] block p-4 transition-all outline-none"
+        />
+
+        <div class="validation-smg">
+          @if (f["phone"].invalid && (f["phone"].dirty || f["phone"].touched)) {
+            <p-message
+              severity="error"
+              text="Valid Egyptian phone number is required"
+              styleClass="w-full justify-start mt-1"
+            ></p-message>
+          }
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-gray-600"
+          >Email Address <span class="text-red-500">*</span></label
+        >
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="example@mail.com"
+          class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-[#db4444]/20 focus:border-[#db4444] block p-4 transition-all outline-none"
+        />
+
+        <div class="validation-smg">
+          @if (f["email"].invalid && (f["email"].dirty || f["email"].touched)) {
+            <p-message
+              severity="error"
+              text="Valid email is required"
+              styleClass="w-full justify-start mt-1"
+            ></p-message>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="pt-4">
+      <button
+        type="submit"
+        [disabled]="addressForm.invalid"
+        class="w-full md:w-auto bg-[#db4444] hover:bg-red-600 disabled:bg-gray-300 text-white font-bold py-4 px-12 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+      >
+        SAVE ADDRESS
+      </button>
+    </div>
+  </form>
+</div>

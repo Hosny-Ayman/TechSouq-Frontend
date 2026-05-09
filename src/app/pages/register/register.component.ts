@@ -1,3 +1,4 @@
+import { ILogin } from './../../../core/Interfaces/http';
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -57,10 +58,18 @@ export class RegisterComponent implements OnInit {
     private _formBuilder: FormBuilder,
   ) {
     this.userData = _formBuilder.group({
-      name: [
+      FirstName: [
         '',
         [
-          Validators.minLength(8),
+          Validators.minLength(3),
+          Validators.maxLength(30),
+          Validators.required,
+        ],
+      ],
+      SecondName: [
+        '',
+        [
+          Validators.minLength(3),
           Validators.maxLength(30),
           Validators.required,
         ],
@@ -80,8 +89,11 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  get name() {
-    return this.userData.get('name');
+  get FirstName() {
+    return this.userData.get('FirstName');
+  }
+  get SecondName() {
+    return this.userData.get('SecondName');
   }
   get email() {
     return this.userData.get('email');
@@ -104,7 +116,8 @@ export class RegisterComponent implements OnInit {
 
   signUp(formData: any): void {
     const finalDataToSedn = {
-      name: formData.name,
+      firstname: formData.FirstName,
+      secondname: formData.SecondName,
       email: formData.email,
       password: formData.password,
       roleId: 2,
@@ -113,8 +126,15 @@ export class RegisterComponent implements OnInit {
     this._authService.register(finalDataToSedn).subscribe({
       next: (respons: any) => {
         console.log('Register Successfuly', respons);
-        this._MyMessage.showSuccess('Register Successfuly');
-        this._ShowSpinner.hide();
+        const login: ILogin = {
+          email: finalDataToSedn.email,
+          password: finalDataToSedn.password,
+        };
+
+        this._authService.signUp(login);
+
+        // this._MyMessage.showSuccess('Register Successfuly');
+        // this._ShowSpinner.hide();
       },
       error: (err) => {
         console.log('Login Failed', err);

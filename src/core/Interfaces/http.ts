@@ -1,5 +1,6 @@
 export interface Iregister {
-  name: string;
+  firstname: string;
+  secondname: string;
   email: string;
   password: string;
   roleId: number;

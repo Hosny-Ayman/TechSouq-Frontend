@@ -19,15 +19,15 @@
         </p-inputGroupAddon>
         <input
           pInputText
-          formControlName="name"
-          placeholder="Name"
+          formControlName="FirstName"
+          placeholder="First Name"
           class="w-full text-center text-lg border border-gray-300 p-2 rounded focus:outline-none focus:border-blue-500"
         />
       </p-inputGroup>
 
       <div class="validation-smg">
-        @if (name?.dirty && name?.touched) {
-          @if (name?.getError("required")) {
+        @if (FirstName?.dirty && FirstName?.touched) {
+          @if (FirstName?.getError("required")) {
             <div class="w-[95%] mx-auto mt-2">
               <p-message
                 severity="error"
@@ -36,16 +36,58 @@
               ></p-message>
             </div>
           }
-          @if (name?.getError("minlength")) {
+          @if (FirstName?.getError("minlength")) {
             <div class="w-[95%] mx-auto mt-2">
               <p-message
                 severity="error"
-                text="must be at least 8 char"
+                text="must be at least 3 char"
                 styleClass="w-full justify-center"
               ></p-message>
             </div>
           }
-          @if (name?.getError("maxlength")) {
+          @if (FirstName?.getError("maxlength")) {
+            <div class="w-[95%] mx-auto mt-2">
+              <p-message
+                severity="error"
+                text="cannot exceed 30 char"
+                styleClass="w-full justify-center"
+              ></p-message>
+            </div>
+          }
+        }
+      </div>
+      <p-inputGroup>
+        <p-inputGroupAddon>
+          <i class="pi pi-user"></i>
+        </p-inputGroupAddon>
+        <input
+          pInputText
+          formControlName="SecondName"
+          placeholder="Second Name"
+          class="w-full text-center text-lg border border-gray-300 p-2 rounded focus:outline-none focus:border-blue-500"
+        />
+      </p-inputGroup>
+      <div class="validation-smg">
+        @if (SecondName?.dirty && SecondName?.touched) {
+          @if (SecondName?.getError("required")) {
+            <div class="w-[95%] mx-auto mt-2">
+              <p-message
+                severity="error"
+                text="Name is required"
+                styleClass="w-full justify-center"
+              ></p-message>
+            </div>
+          }
+          @if (SecondName?.getError("minlength")) {
+            <div class="w-[95%] mx-auto mt-2">
+              <p-message
+                severity="error"
+                text="must be at least 3 char"
+                styleClass="w-full justify-center"
+              ></p-message>
+            </div>
+          }
+          @if (SecondName?.getError("maxlength")) {
             <div class="w-[95%] mx-auto mt-2">
               <p-message
                 severity="error"

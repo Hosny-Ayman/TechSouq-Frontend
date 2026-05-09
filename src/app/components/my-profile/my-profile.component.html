@@ -1,0 +1,225 @@
+<div
+  class="bg-white p-8 md:p-10 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100"
+>
+  <h2 class="text-2xl font-bold text-[#db4444] mb-8">Edit Your Profile</h2>
+
+  <form
+    [formGroup]="userData"
+    (ngSubmit)="saveProfile()"
+    class="flex flex-col gap-6"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="flex flex-col gap-2">
+        <label class="text-[14px] font-medium text-gray-700">First Name</label>
+        <input
+          type="text"
+          formControlName="FirstName"
+          placeholder="First Name"
+          class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-[#db4444]/30 focus:border-[#db4444] block p-3.5 transition-all duration-300 outline-none"
+        />
+        <div class="validation-smg">
+          @if (FirstName?.dirty || FirstName?.touched) {
+            @if (FirstName?.getError("required")) {
+              <div class="w-[95%] mx-auto mt-2">
+                <p-message
+                  severity="error"
+                  text="Name is required"
+                  styleClass="w-full justify-center"
+                ></p-message>
+              </div>
+            }
+            @if (FirstName?.getError("minlength")) {
+              <div class="w-[95%] mx-auto mt-2">
+                <p-message
+                  severity="error"
+                  text="Must be at least 3 char"
+                  styleClass="w-full justify-center"
+                ></p-message>
+              </div>
+            }
+            @if (FirstName?.getError("maxlength")) {
+              <div class="w-[95%] mx-auto mt-2">
+                <p-message
+                  severity="error"
+                  text="Cannot exceed 30 char"
+                  styleClass="w-full justify-center"
+                ></p-message>
+              </div>
+            }
+          }
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label class="text-[14px] font-medium text-gray-700">Last Name</label>
+        <input
+          type="text"
+          formControlName="SecondName"
+          placeholder="Last Name"
+          class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-[#db4444]/30 focus:border-[#db4444] block p-3.5 transition-all duration-300 outline-none"
+        />
+        <div class="validation-smg">
+          @if (SecondName?.dirty || SecondName?.touched) {
+            @if (SecondName?.getError("required")) {
+              <div class="w-[95%] mx-auto mt-2">
+                <p-message
+                  severity="error"
+                  text="Last Name is required"
+                  styleClass="w-full justify-center"
+                ></p-message>
+              </div>
+            }
+            @if (SecondName?.getError("minlength")) {
+              <div class="w-[95%] mx-auto mt-2">
+                <p-message
+                  severity="error"
+                  text="Must be at least 3 char"
+                  styleClass="w-full justify-center"
+                ></p-message>
+              </div>
+            }
+            @if (SecondName?.getError("maxlength")) {
+              <div class="w-[95%] mx-auto mt-2">
+                <p-message
+                  severity="error"
+                  text="Cannot exceed 30 char"
+                  styleClass="w-full justify-center"
+                ></p-message>
+              </div>
+            }
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="flex flex-col gap-2">
+        <label class="text-[14px] font-medium text-gray-700">Email</label>
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="example@domain.com"
+          class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-[#db4444]/30 focus:border-[#db4444] block p-3.5 transition-all duration-300 outline-none"
+        />
+        <div class="validation-smg">
+          @if (email?.dirty || email?.touched) {
+            @if (email?.getError("required")) {
+              <div class="w-[95%] mx-auto mt-2">
+                <p-message
+                  severity="error"
+                  text="Email is required"
+                  styleClass="w-full justify-center"
+                ></p-message>
+              </div>
+            }
+            @if (email?.getError("email")) {
+              <div class="w-[95%] mx-auto mt-2">
+                <p-message
+                  severity="error"
+                  text="Invalid email format"
+                  styleClass="w-full justify-center"
+                ></p-message>
+              </div>
+            }
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <h3 class="text-[15px] font-bold text-gray-800 mb-4">Password Changes</h3>
+      <div class="flex flex-col gap-4">
+        <div class="relative w-full">
+          <input
+            [type]="showPassword.current ? 'text' : 'password'"
+            formControlName="currentPassword"
+            placeholder="Current Password"
+            class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-[#db4444]/30 focus:border-[#db4444] block p-3.5 pr-12 transition-all duration-300 outline-none"
+          />
+          <i
+            class="pi absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-gray-700 transition-colors text-lg"
+            [ngClass]="showPassword.current ? 'pi-eye' : 'pi-eye-slash'"
+            (click)="togglePassword('current')"
+          ></i>
+        </div>
+
+        <div class="relative w-full flex flex-col gap-2">
+          <div class="relative">
+            <input
+              [type]="showPassword.new ? 'text' : 'password'"
+              formControlName="newPassword"
+              placeholder="New Password"
+              class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-[#db4444]/30 focus:border-[#db4444] block p-3.5 pr-12 transition-all duration-300 outline-none"
+            />
+            <i
+              class="pi absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-gray-700 transition-colors text-lg"
+              [ngClass]="showPassword.new ? 'pi-eye' : 'pi-eye-slash'"
+              (click)="togglePassword('new')"
+            ></i>
+          </div>
+          <div class="validation-smg">
+            @if (newPassword?.dirty || newPassword?.touched) {
+              @if (newPassword?.getError("minlength")) {
+                <div class="w-[95%] mx-auto mt-2">
+                  <p-message
+                    severity="error"
+                    text="Password must be at least 8 characters"
+                    styleClass="w-full justify-center"
+                  ></p-message>
+                </div>
+              }
+              @if (newPassword?.getError("pattern")) {
+                <div class="w-[95%] mx-auto mt-2">
+                  <p-message
+                    severity="error"
+                    text="Must contain Uppercase, Lowercase, Number & Symbol"
+                    styleClass="w-full justify-center"
+                  ></p-message>
+                </div>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="relative w-full flex flex-col gap-2">
+          <div class="relative">
+            <input
+              [type]="showPassword.confirm ? 'text' : 'password'"
+              formControlName="confirmPassword"
+              placeholder="Confirm New Password"
+              class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-[#db4444]/30 focus:border-[#db4444] block p-3.5 pr-12 transition-all duration-300 outline-none"
+            />
+            <i
+              class="pi absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-gray-700 transition-colors text-lg"
+              [ngClass]="showPassword.confirm ? 'pi-eye' : 'pi-eye-slash'"
+              (click)="togglePassword('confirm')"
+            ></i>
+          </div>
+          <div class="validation-smg">
+            @if (confirmPassword?.dirty || confirmPassword?.touched) {
+              @if (confirmPassword?.getError("passwordMismatch")) {
+                <div class="w-[95%] mx-auto mt-2">
+                  <p-message
+                    severity="error"
+                    text="Passwords do not match"
+                    styleClass="w-full justify-center"
+                  ></p-message>
+                </div>
+              }
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-end items-center gap-6 mt-6">
+      <button
+        type="submit"
+        [disabled]="userData.invalid || userData.pristine"
+        class="bg-[#db4444] hover:bg-red-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-medium py-3 px-8 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-1"
+      >
+        Save Changes
+      </button>
+    </div>
+  </form>
+</div>

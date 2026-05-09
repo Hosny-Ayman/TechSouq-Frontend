@@ -1,0 +1,85 @@
+<div class="max-w-7xl mx-auto px-4 py-10 font-sans">
+  <div class="flex justify-between items-center mb-10 text-[14px]">
+    <div class="text-gray-500">
+      <a
+        routerLink="/Home"
+        class="hover:text-black transition-colors duration-300"
+        >Home</a
+      >
+      <span class="mx-2">/</span>
+      <span class="text-black font-medium">My Account</span>
+    </div>
+    <div class="text-gray-700">
+      Welcome!
+      <span class="text-[#db4444] font-bold tracking-wide">{{
+        user.firstName
+      }}</span>
+    </div>
+  </div>
+
+  <div class="flex flex-col md:flex-row gap-10">
+    <aside class="w-full md:w-64 flex-shrink-0">
+      <div class="flex flex-col gap-6">
+        <div>
+          <h3 class="text-black font-bold mb-3 text-[16px]">
+            Manage My Account
+          </h3>
+          <ul class="flex flex-col gap-2 pl-4 text-[15px] text-gray-500">
+            <li>
+              <a
+                routerLink="MyProfile"
+                routerLinkActive="text-[#db4444]"
+                class="font-medium cursor-pointer transition-colors duration-300 hover:text-black"
+                >My Profile</a
+              >
+            </li>
+            <li>
+              <a
+                routerLink="Address"
+                routerLinkActive="text-[#db4444]"
+                class="hover:text-black cursor-pointer transition-colors duration-300"
+                >Address Book</a
+              >
+            </li>
+            <li>
+              <a
+                class="hover:text-black cursor-pointer transition-colors duration-300"
+                >My Payment Options</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-black font-bold mb-3 text-[16px]">My Orders</h3>
+          <ul class="flex flex-col gap-2 pl-4 text-[15px] text-gray-500">
+            <li>
+              <a
+                class="hover:text-black cursor-pointer transition-colors duration-300"
+                >My Returns</a
+              >
+            </li>
+            <li>
+              <a
+                class="hover:text-black cursor-pointer transition-colors duration-300"
+                >My Cancellations</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h3
+            class="text-black font-bold mb-3 text-[16px] cursor-pointer hover:text-[#db4444] transition-colors duration-300"
+          >
+            My WishList
+          </h3>
+        </div>
+      </div>
+    </aside>
+
+    <div class="flex-1">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

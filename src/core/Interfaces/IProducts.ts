@@ -20,4 +20,11 @@ export interface Product {
   firstImage: string;
   categoryName: string;
   brandName: string;
+
+  averageRating: number;
+  totalReviews: number;
+  discountStartDate: Date;
+  discountEndDate: Date;
+  isFreeShipping: boolean;
+  priceAfterDiscount: number;
 }
