@@ -3,26 +3,19 @@ import { authGuard } from '../core/guards/auth.guard';
 import { guestGuard } from '../core/guards/guest-guard.guard';
 
 export const routes: Routes = [
-  // ==========================================
-  // 1. الدخول الأساسي للموقع
-  // ==========================================
   {
     path: '',
     pathMatch: 'full',
     redirectTo: 'Home',
   },
 
-  // ==========================================
-  // 2. الجزء الخاص بالزوار (Auth Layout)
-  // اللي مش مسجل هيشوف الناف بار والفوتر بتاع الزوار
-  // ==========================================
   {
     path: '',
     loadComponent: () =>
       import('./layouts/auth-layout/auth-layout.component').then(
         (c) => c.AuthLayoutComponent,
       ),
-    canActivate: [guestGuard], // 👈 السحر هنا: لو مسجل هيطرده لقسم الـ User
+    canActivate: [guestGuard],
     children: [
       {
         path: 'Home',
@@ -55,20 +48,31 @@ export const routes: Routes = [
             (c) => c.CartComponent,
           ),
       },
+      {
+        path: 'ForgetPassword',
+        loadComponent: () =>
+          import('./components/forget-password/forget-password.component').then(
+            (c) => c.ForgetPasswordComponent,
+          ),
+      },
+
+      {
+        path: 'Reset-Password',
+        loadComponent: () =>
+          import('./components/reset-password/reset-password.component').then(
+            (c) => c.ResetPasswordComponent,
+          ),
+      },
     ],
   },
 
-  // ==========================================
-  // 3. الجزء المحمي (User Layout)
-  // اللي مسجل دخول هيشوف الناف بار والفوتر بتاع اليوزر
-  // ==========================================
   {
     path: 'User',
     loadComponent: () =>
       import('./layouts/user-layout/user-layout.component').then(
         (c) => c.UserLayoutComponent,
       ),
-    canActivate: [authGuard], // 👈 الجارد بتاعك بيقفل الجزء ده
+    canActivate: [authGuard],
     children: [
       {
         path: '',
@@ -132,6 +136,13 @@ export const routes: Routes = [
               ),
           },
         ],
+      },
+      {
+        path: 'Order',
+        loadComponent: () =>
+          import('./pages/order-summarie/order-summarie.component').then(
+            (c) => c.OrderSummarieComponent,
+          ),
       },
     ],
   },

@@ -1,28 +1,62 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, PLATFORM_ID, inject } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
 import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { MessageService } from 'primeng/api';
 import {
   provideHttpClient,
   withFetch,
   withInterceptors,
 } from '@angular/common/http';
-import { authInterceptor } from './core/interceptors/auth.interceptor'; // تأكد إن المسار ده صح
+import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { MessageService } from 'primeng/api';
+import { isPlatformBrowser } from '@angular/common';
+
+// Imports مكتبة جوجل
+import {
+  SocialAuthServiceConfig,
+  GoogleLoginProvider,
+} from '@abacritt/angularx-social-login';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideClientHydration(), // يفضل تسيبها شغالة عشان الـ SSR يشتغل صح
+    provideClientHydration(),
     provideAnimations(),
     MessageService,
+    provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
 
-    // 👇 التعديل كله هنا: دمجناهم مع بعض
-    provideHttpClient(
-      withFetch(), // عشان التحذير بتاع الفيتش
-      withInterceptors([authInterceptor]), // عشان نشغل الانترسبتور
-    ),
+    // 👇 الحل الجذري للـ Bug وللـ SSR
+    {
+      provide: 'SocialAuthServiceConfig',
+      useFactory: () => {
+        const platformId = inject(PLATFORM_ID);
+        const isBrowser = isPlatformBrowser(platformId);
+
+        // لو إحنا في البراوزر (شاشة العميل)، شغل جوجل عادي
+        if (isBrowser) {
+          return {
+            autoLogin: false,
+            providers: [
+              {
+                id: GoogleLoginProvider.PROVIDER_ID,
+                provider: new GoogleLoginProvider(
+                  '686495575320-pbl37bfoma2rmpu8v5j4d9nvlgb33sop.apps.googleusercontent.com',
+                ),
+              },
+            ],
+            onError: (err: any) => {
+              console.error('Google Auth Error:', err);
+            },
+          } as SocialAuthServiceConfig;
+        }
+
+        // لو إحنا في السيرفر (SSR)، رجع إعدادات فاضية عشان ميكرش ويجيب شاشة بيضا
+        return {
+          autoLogin: false,
+          providers: [],
+        } as SocialAuthServiceConfig;
+      },
+    },
   ],
 };
