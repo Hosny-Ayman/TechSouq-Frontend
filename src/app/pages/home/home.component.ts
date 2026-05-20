@@ -84,7 +84,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       { breakpoint: '560px', numVisible: 1 },
     ];
 
-    // بنحمل المنتجات اللي في السلة أول ما الصفحة تفتح
     this.loadCartIds();
 
     this._Products.currentSearch.pipe(takeUntil(this.destroy$)).subscribe({
@@ -126,7 +125,6 @@ export class HomeComponent implements OnInit, OnDestroy {
             console.log('addToCart', req);
             this._message.showSuccess('Product added To Cart Successfully');
 
-            // أول ما يضيف بنحط الـ ID في الـ Set عشان الزرار يقلب أخضر فوراً
             this.cartProductIds.add(product.id);
 
             if (req && req.data !== undefined) {
@@ -151,9 +149,13 @@ export class HomeComponent implements OnInit, OnDestroy {
           next: (req: any) => {
             if (req && req.data) {
               const items: ICartItemsAndProductsDetails[] = req.data;
-              items.forEach((item) => this.cartProductIds.add(item.productId));
+              items.forEach((item: any) =>
+                this.cartProductIds.add(item.productId),
+              );
+              console.log('loadCartIds Sucessfully', req);
             }
           },
+          error: (err: any) => console.log('loadCartIds Failed', err),
         });
     } else {
       if (this.isbrowser) {

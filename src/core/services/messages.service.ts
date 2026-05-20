@@ -15,11 +15,18 @@ export class MessagesService {
     });
   }
 
-  // دالة جاهزة للخطأ
   showError(message: string) {
     this.primeMessageService.add({
       severity: 'error',
       summary: 'Error',
+      detail: message,
+    });
+  }
+
+  showWarning(message: string) {
+    this.primeMessageService.add({
+      severity: 'warn',
+      summary: 'Warning',
       detail: message,
     });
   }

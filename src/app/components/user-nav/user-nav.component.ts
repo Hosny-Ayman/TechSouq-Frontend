@@ -68,7 +68,6 @@ export class UserNavComponent {
   }
 
   onInputClear() {
-    // لو الـ input بقى فاضي، هنفضي كلمة البحث من السيرفيس فوراً عشان السيستم ينسى
     if (!this.searchWord || this.searchWord.trim() === '') {
       this._Products.changeSearchTerm('');
     }
@@ -89,14 +88,13 @@ export class UserNavComponent {
       this._cart.GetCartItems().subscribe({
         next: (res: any) => {
           console.log('CartItem', res.data);
-          // خد بالك: طالما إنت بتجيب GetCartItems (السلة كلها)، يبقى res.data عبارة عن مصفوفة، فهنعد الـ length بتاعها
           const count = res.data ? res.data.length : 0;
-          this._cart.ShowCartItems(count); // 👈 لازم تنادي دي عشان تفوق البادج
+          this._cart.ShowCartItems(count);
         },
       });
     } else {
       const cart = this._cart.getCartAnonymousCkient();
-      this._cart.ShowCartItems(cart.length); // 👈 وهنا كمان
+      this._cart.ShowCartItems(cart.length);
     }
   }
 
