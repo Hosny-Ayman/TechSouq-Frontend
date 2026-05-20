@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Product } from '../../../core/Interfaces/IProducts';
 import { ProductsService } from '../../../core/services/products.service';
 import { CartService } from '../../../core/services/cart.service';
@@ -14,11 +15,12 @@ import { MessagesService } from '../../../core/services/messages.service';
 import { ICartItems } from '../../../core/Interfaces/icart-items';
 import { AuthService } from '../../../core/services/auth.service';
 import { Subject, takeUntil } from 'rxjs';
+import { ProductReviewService } from '../../../core/services/product-review.service';
 
 @Component({
   selector: 'app-product-detils',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './product-detils.component.html',
   styleUrl: './product-detils.component.css',
 })
@@ -29,6 +31,21 @@ export class ProductDetilsComponent implements OnInit, OnDestroy {
   selectedImage: string = '';
   isInCart: boolean = false;
 
+  CanUserReviewProduct: boolean = false;
+  userReviewId: number | null = null;
+  isEditingReview: boolean = false;
+  createdAt: Date = new Date();
+
+  reviews: any[] = [];
+  newReviewText: string = '';
+  newReviewRating: number = 0;
+  hoverRating: number = 0;
+  starsArray: number[] = [1, 2, 3, 4, 5];
+
+  reviewPageNumber: number = 1;
+  reviewPageSize: number = 10;
+  totalReviewPages: number = 1;
+
   platFormId = inject(PLATFORM_ID);
   isbrowser = isPlatformBrowser(this.platFormId);
   private destroy$ = new Subject<void>();
@@ -38,16 +55,23 @@ export class ProductDetilsComponent implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _cart: CartService,
     private _message: MessagesService,
-    private _auth: AuthService,
+    public _auth: AuthService,
+    private _review: ProductReviewService,
   ) {}
 
   ngOnInit(): void {
+    if (this.isbrowser) {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+
     this._route.paramMap.subscribe((params) => {
       this.ProductId = Number(params.get('id'));
 
       if (this.ProductId) {
         this.fetchProductData();
         this.checkIfInCart();
+        this.checkUserReviewStatus();
+        this.loadReviews();
       }
     });
   }
@@ -113,7 +137,7 @@ export class ProductDetilsComponent implements OnInit, OnDestroy {
 
     const cartItem: ICartItems = {
       productId: this.ProductDetails.id,
-      quantity: 1, // خلينا الكمية دايما 1 هنا
+      quantity: 1,
       productName: this.ProductDetails.name,
       productImage: this.ProductDetails.firstImage,
       productPrice: finalPrice,
@@ -133,6 +157,121 @@ export class ProductDetilsComponent implements OnInit, OnDestroy {
         this._message.showError('Failed to add product to cart');
       },
     });
+  }
+
+  checkUserReviewStatus() {
+    if (this._auth.currentUser.value !== null) {
+      this._review.CanUserReviewProduct(this.ProductId).subscribe({
+        next: (req: any) => {
+          this.CanUserReviewProduct = req.data;
+        },
+      });
+
+      this._review.CanUserEditHisReview(this.ProductId).subscribe({
+        next: (req: any) => {
+          this.userReviewId = req.data;
+        },
+      });
+    }
+  }
+
+  loadReviews() {
+    this._review
+      .GetAllReviews(this.reviewPageNumber, this.reviewPageSize, this.ProductId)
+      .subscribe({
+        next: (req: any) => {
+          this.reviews = req.data.data || [];
+          this.totalReviewPages = req.data.totalPages || 1;
+        },
+        error: (err: any) => {
+          console.log('Failed to load reviews', err);
+        },
+      });
+  }
+
+  nextReviewPage() {
+    if (this.reviewPageNumber < this.totalReviewPages) {
+      this.reviewPageNumber++;
+      this.loadReviews();
+    }
+  }
+
+  prevReviewPage() {
+    if (this.reviewPageNumber > 1) {
+      this.reviewPageNumber--;
+      this.loadReviews();
+    }
+  }
+
+  setRating(star: number) {
+    this.newReviewRating = star;
+  }
+
+  startEditReview(review: any) {
+    this.isEditingReview = true;
+    this.newReviewText = review.comment;
+    this.newReviewRating = review.rating;
+    this.createdAt = review.createdAt;
+
+    const formElement = document.getElementById('review-form-section');
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  cancelEdit() {
+    this.isEditingReview = false;
+    this.newReviewText = '';
+    this.newReviewRating = 0;
+    this.hoverRating = 0;
+  }
+
+  submitReview() {
+    if (this.newReviewRating === 0) {
+      this._message.showError('Please select a star rating.');
+      return;
+    }
+    if (!this.newReviewText.trim()) {
+      this._message.showError('Please write your review.');
+      return;
+    }
+
+    const reviewPayload = {
+      id: this.isEditingReview && this.userReviewId ? this.userReviewId : 0,
+      productId: this.ProductId,
+      rating: this.newReviewRating,
+      comment: this.newReviewText,
+      createdAt: this.createdAt,
+    };
+
+    if (this.isEditingReview) {
+      this._review.UpdateReview(reviewPayload).subscribe({
+        next: (req: any) => {
+          this._message.showSuccess('Review updated successfully.');
+          this.cancelEdit();
+          this.loadReviews();
+        },
+        error: (err: any) => {
+          this._message.showError('Failed to update review. Please try again.');
+        },
+      });
+    } else {
+      this._review.AddReview(reviewPayload).subscribe({
+        next: (req: any) => {
+          this._message.showSuccess('Thank you! Your review has been posted.');
+          this.newReviewText = '';
+          this.newReviewRating = 0;
+          this.hoverRating = 0;
+          this.CanUserReviewProduct = false;
+          this.checkUserReviewStatus();
+          this.reviewPageNumber = 1;
+          this.loadReviews();
+        },
+        error: (err: any) => {
+          this._message.showError('Failed to post review. Please try again.');
+        },
+      });
+    }
   }
 
   ngOnDestroy(): void {

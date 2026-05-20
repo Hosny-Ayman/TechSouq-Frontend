@@ -49,7 +49,12 @@ export class ProductsService {
   }
 
   public getDiscountPercentage(product: Product): number {
-    if (!product.priceAfterDiscount) return 0;
+    if (
+      !product.priceAfterDiscount ||
+      product.priceAfterDiscount >= product.price
+    ) {
+      return 0;
+    }
 
     return Math.round(
       ((product.price - product.priceAfterDiscount) / product.price) * 100,
