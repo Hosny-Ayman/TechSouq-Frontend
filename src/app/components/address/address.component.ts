@@ -29,18 +29,8 @@ export class AddressComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.user = this._user.loadCurrentUser();
-    this._address
-      .GetAllAddresses()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (req: any) => {
-          console.log('get Adderess Successfully', req);
-          let addresses = req.data;
 
-          this.myallAddresses = addresses ? (addresses as IAddress[]) : [];
-        },
-        error: (err: any) => console.log('get Adderess Failed', err),
-      });
+    this.GetAllAddresses();
   }
 
   setAsDefault(id: number) {
@@ -68,6 +58,7 @@ export class AddressComponent implements OnInit {
         console.log('Set Remove Successfully', req);
 
         this.myallAddresses = this.myallAddresses.filter((x) => x.id !== id);
+        this.GetAllAddresses();
 
         this._message.showSuccess('Address Removed Successfully');
       },
@@ -76,5 +67,20 @@ export class AddressComponent implements OnInit {
         this._message.showSuccess('Address Removed Failed');
       },
     });
+  }
+
+  GetAllAddresses(): void {
+    this._address
+      .GetAllAddresses()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (req: any) => {
+          console.log('get Adderess Successfully', req);
+          let addresses = req.data;
+
+          this.myallAddresses = addresses ? (addresses as IAddress[]) : [];
+        },
+        error: (err: any) => console.log('get Adderess Failed', err),
+      });
   }
 }

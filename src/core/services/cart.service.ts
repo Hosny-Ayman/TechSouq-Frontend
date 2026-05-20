@@ -5,7 +5,7 @@ import {
   ICartItemsAndProductsDetails,
   Items,
 } from '../Interfaces/icart-items';
-import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject, tap } from 'rxjs';
 import { baseUrl } from '../apiRoot/baseUrl';
 import { AuthService } from './auth.service';
 import { isPlatformBrowser } from '@angular/common';
@@ -163,19 +163,22 @@ export class CartService {
     return this._http.post(`${baseUrl}CartItems/AddItems`, Items);
   }
 
-  AddCartItemsAfterLoginAndCLearLocalStorage(): void {
+  AddCartItemsAfterLoginAndCLearLocalStorage(): Observable<any> {
     const cartitems = localStorage.getItem('cart');
 
     const cart = cartitems ? (JSON.parse(cartitems) as ICartItems[]) : [];
 
     if (cart.length !== 0) {
-      this.addItems(cart).subscribe({
-        next: (req: any) => {
+      return this.addItems(cart).pipe(
+        tap((req: any) => {
           console.log('items added Successfully', req);
+
           localStorage.removeItem('cart');
-        },
-      });
+        }),
+      );
     }
+
+    return of(null);
   }
 
   removeItemsFormlocalStorage(): void {

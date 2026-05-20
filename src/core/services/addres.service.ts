@@ -33,4 +33,16 @@ export class AddresService {
   UpdateAddress(address: IAddress): Observable<any> {
     return this._http.put(`${baseUrl}Addresses/Update`, address);
   }
+
+  GetOnlyDefaultAddress(): Observable<any> {
+    return this._http.get(`${baseUrl}Addresses/GetOnlyDefaultAddress`, {});
+  }
+
+  GetCityShippingCost(CityName?: string): Observable<any> {
+    return this._http.get(`${baseUrl}Addresses/GetCityShippingCost`, {
+      params: {
+        CityName: CityName || '',
+      },
+    });
+  }
 }

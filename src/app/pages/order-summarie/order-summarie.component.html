@@ -1,0 +1,296 @@
+<div class="min-h-screen bg-gray-50/50 py-12 px-4 sm:px-6 lg:px-8 font-sans">
+  <div class="max-w-5xl mx-auto space-y-10">
+    <div>
+      <h1 class="text-3xl font-black text-gray-900 tracking-tight">
+        Order History
+      </h1>
+      <p class="text-sm text-gray-500 mt-1">
+        Check the status of recent orders, manage returns, and discover similar
+        products.
+      </p>
+    </div>
+
+    @for (order of orders; track order.id) {
+      <div
+        class="bg-white rounded-[2rem] shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-gray-100 overflow-hidden transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)]"
+      >
+        <div
+          class="bg-gray-50/50 border-b border-gray-100 px-6 py-5 sm:px-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+        >
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 text-sm">
+            <div>
+              <span class="block text-gray-500 font-medium mb-1"
+                >Order Number</span
+              >
+              <span class="font-bold text-gray-900">{{
+                formatOrderNumber(order.id)
+              }}</span>
+            </div>
+            <div>
+              <span class="block text-gray-500 font-medium mb-1"
+                >Date Placed</span
+              >
+              <span class="font-bold text-gray-900">{{
+                order.date | date: "MMM d, y, h:mm a"
+              }}</span>
+            </div>
+            <div>
+              <span class="block text-gray-500 font-medium mb-1"
+                >Total Amount</span
+              >
+              <span class="font-bold text-gray-900"
+                >{{ order.totalAmount | number: "1.2-2" }} EGP</span
+              >
+            </div>
+          </div>
+
+          <button
+            class="w-full sm:w-auto bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-indigo-600 font-bold py-2.5 px-5 rounded-xl transition-all shadow-sm text-sm"
+          >
+            View Invoice
+          </button>
+        </div>
+
+        <div class="px-6 py-6 sm:px-8">
+          <h3 class="sr-only">Items in your order</h3>
+          <ul class="divide-y divide-gray-100">
+            @for (item of order.items; track item.id) {
+              <li class="py-6 flex gap-6">
+                <div
+                  class="w-24 h-24 sm:w-32 sm:h-32 flex-shrink-0 bg-gray-50 rounded-2xl border border-gray-100 overflow-hidden p-2"
+                >
+                  <img
+                    [src]="
+                      item.image
+                        ? item.image
+                        : 'https://placehold.co/400x400?text=No+Image'
+                    "
+                    [alt]="item.name"
+                    class="w-full h-full object-contain mix-blend-multiply"
+                  />
+                </div>
+
+                <div class="flex-1 flex flex-col">
+                  <div class="flex justify-between items-start gap-4">
+                    <div>
+                      <h4
+                        class="text-base font-bold text-gray-900 line-clamp-2"
+                      >
+                        {{ item.name }}
+                      </h4>
+                    </div>
+                    <p
+                      class="text-base font-black text-gray-900 whitespace-nowrap"
+                    >
+                      {{ item.price | number: "1.2-2" }} EGP
+                    </p>
+                  </div>
+
+                  <div class="mt-auto pt-4 flex items-center justify-between">
+                    <div
+                      class="flex items-center gap-2 bg-indigo-50/50 border border-indigo-100 px-3 py-1.5 rounded-lg"
+                    >
+                      <span class="text-xs font-medium text-indigo-400"
+                        >Qty</span
+                      >
+                      <span class="text-sm font-black text-indigo-700">{{
+                        item.quantity
+                      }}</span>
+                    </div>
+
+                    <button
+                      class="text-sm font-bold text-indigo-600 hover:text-indigo-500"
+                    >
+                      Buy Again
+                    </button>
+                  </div>
+                </div>
+              </li>
+            }
+          </ul>
+        </div>
+
+        <div class="px-6 pb-8 sm:px-8">
+          <div class="mt-4">
+            <h4 class="sr-only">Status</h4>
+            <p class="text-sm font-black text-gray-900 mb-6">
+              Status: <span class="text-indigo-600">{{ order.status }}</span>
+            </p>
+
+            <div class="relative">
+              <div
+                class="absolute inset-0 flex items-center"
+                aria-hidden="true"
+              >
+                <div
+                  class="w-full border-t-[3px] border-gray-100 rounded-full"
+                ></div>
+              </div>
+              <div
+                class="absolute inset-0 flex items-center"
+                aria-hidden="true"
+              >
+                <div
+                  class="border-t-[3px] border-indigo-600 rounded-full transition-all duration-1000 ease-in-out"
+                  [style.width]="getProgressWidth(order.status)"
+                ></div>
+              </div>
+
+              <div
+                class="relative flex justify-between text-xs sm:text-sm font-bold"
+              >
+                <div class="flex flex-col items-center gap-3 w-1/4">
+                  <div
+                    class="h-5 w-5 rounded-full ring-4 ring-white flex items-center justify-center transition-colors"
+                    [ngClass]="
+                      isStepCompleted(order.status, 'placed')
+                        ? 'bg-indigo-600'
+                        : 'bg-gray-200'
+                    "
+                  >
+                    @if (isStepCompleted(order.status, "placed")) {
+                      <i class="pi pi-check text-[10px] text-white"></i>
+                    }
+                  </div>
+                  <span
+                    [ngClass]="
+                      isStepCompleted(order.status, 'placed')
+                        ? 'text-indigo-600'
+                        : 'text-gray-400'
+                    "
+                    >Order Placed</span
+                  >
+                </div>
+                <div class="flex flex-col items-center gap-3 w-1/4 text-center">
+                  <div
+                    class="h-5 w-5 rounded-full ring-4 ring-white flex items-center justify-center transition-colors"
+                    [ngClass]="
+                      isStepCompleted(order.status, 'processing')
+                        ? 'bg-indigo-600'
+                        : 'bg-gray-200'
+                    "
+                  >
+                    @if (isStepCompleted(order.status, "processing")) {
+                      <i class="pi pi-check text-[10px] text-white"></i>
+                    }
+                  </div>
+                  <span
+                    [ngClass]="
+                      isStepCompleted(order.status, 'processing')
+                        ? 'text-indigo-600'
+                        : 'text-gray-400'
+                    "
+                    >Processing</span
+                  >
+                </div>
+                <div class="flex flex-col items-center gap-3 w-1/4 text-center">
+                  <div
+                    class="h-5 w-5 rounded-full ring-4 ring-white flex items-center justify-center transition-colors"
+                    [ngClass]="
+                      isStepCompleted(order.status, 'shipped')
+                        ? 'bg-indigo-600'
+                        : 'bg-gray-200'
+                    "
+                  >
+                    @if (isStepCompleted(order.status, "shipped")) {
+                      <i class="pi pi-check text-[10px] text-white"></i>
+                    }
+                  </div>
+                  <span
+                    [ngClass]="
+                      isStepCompleted(order.status, 'shipped')
+                        ? 'text-indigo-600'
+                        : 'text-gray-400'
+                    "
+                    >Shipped</span
+                  >
+                </div>
+                <div class="flex flex-col items-end gap-3 w-1/4 text-right">
+                  <div
+                    class="h-5 w-5 rounded-full ring-4 ring-white flex items-center justify-center transition-colors"
+                    [ngClass]="
+                      isStepCompleted(order.status, 'delivered')
+                        ? 'bg-indigo-600'
+                        : 'bg-gray-200'
+                    "
+                  >
+                    @if (isStepCompleted(order.status, "delivered")) {
+                      <i class="pi pi-check text-[10px] text-white"></i>
+                    }
+                  </div>
+                  <span
+                    [ngClass]="
+                      isStepCompleted(order.status, 'delivered')
+                        ? 'text-indigo-600'
+                        : 'text-gray-400'
+                    "
+                    >Delivered</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="bg-gray-50/50 border-t border-gray-100 px-6 py-8 sm:px-8 grid grid-cols-1 md:grid-cols-3 gap-8"
+        >
+          <div>
+            <h4
+              class="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2"
+            >
+              <i class="pi pi-map-marker text-indigo-500"></i> Delivery Address
+            </h4>
+            <p class="text-sm text-gray-500 leading-relaxed">
+              {{ order.deliveryAddress }}
+            </p>
+          </div>
+
+          <div>
+            <h4
+              class="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2"
+            >
+              <i class="pi pi-credit-card text-indigo-500"></i> Payment
+              Information
+            </h4>
+            <p class="text-sm text-gray-500">
+              {{ getPaymentMethod(order.paymentWayId) }}
+            </p>
+          </div>
+
+          <div class="space-y-3">
+            <div class="flex justify-between text-sm text-gray-500">
+              <span>Subtotal</span>
+              <span class="font-bold text-gray-900">{{
+                order.subtotal | number: "1.2-2"
+              }}</span>
+            </div>
+            <div class="flex justify-between text-sm text-gray-500">
+              <span>Shipping</span>
+              <span class="font-bold text-gray-900">
+                {{ order.deliveryCost === 0 ? "Free" : order.deliveryCost }}
+              </span>
+            </div>
+            @if (order.discountAmount > 0) {
+              <div class="flex justify-between text-sm text-emerald-600">
+                <span>Discount</span>
+                <span class="font-bold"
+                  >-{{ order.discountAmount | number: "1.2-2" }}</span
+                >
+              </div>
+            }
+            <div
+              class="border-t border-gray-200 pt-3 flex justify-between items-center"
+            >
+              <span class="text-base font-bold text-gray-900">Order Total</span>
+              <span class="text-xl font-black text-indigo-600">
+                {{ order.totalAmount | number: "1.2-2" }}
+                <span class="text-xs text-gray-500 font-bold">EGP</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

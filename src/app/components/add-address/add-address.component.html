@@ -77,8 +77,6 @@
         class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-[#db4444]/20 focus:border-[#db4444] block p-4 transition-all outline-none appearance-none"
       >
         <option value="Egypt">Egypt</option>
-        <option value="Saudi Arabia">Saudi Arabia</option>
-        <option value="UAE">UAE</option>
       </select>
     </div>
 
@@ -110,15 +108,28 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div class="flex flex-col gap-2">
-        <label class="text-sm font-medium text-gray-600"
-          >Town / City <span class="text-red-500">*</span></label
-        >
-        <input
-          type="text"
-          formControlName="city"
-          placeholder="e.g. Giza"
-          class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-[#db4444]/20 focus:border-[#db4444] block p-4 transition-all outline-none"
-        />
+        <label class="text-sm font-medium text-gray-600">
+          Town / City <span class="text-red-500">*</span>
+        </label>
+
+        <div class="relative">
+          <select
+            formControlName="city"
+            class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-[#db4444]/20 focus:border-[#db4444] block p-4 transition-all outline-none appearance-none cursor-pointer"
+          >
+            <option value="" disabled selected>Select your Governorate</option>
+
+            @for (zone of deliveryZones; track zone.id) {
+              <option [value]="zone.name">{{ zone.name }}</option>
+            }
+          </select>
+
+          <div
+            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500"
+          >
+            <i class="pi pi-angle-down"></i>
+          </div>
+        </div>
 
         <div class="validation-smg">
           @if (f["city"].invalid && (f["city"].dirty || f["city"].touched)) {
@@ -129,6 +140,21 @@
             ></p-message>
           }
         </div>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-gray-600"
+          >Building / Appt
+          <span class="text-gray-400 font-normal text-xs"
+            >(Optional)</span
+          ></label
+        >
+        <input
+          type="text"
+          formControlName="building"
+          placeholder="e.g. Building 5, Floor 2"
+          class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-[#db4444]/20 focus:border-[#db4444] block p-4 transition-all outline-none"
+        />
       </div>
     </div>
 

@@ -11,6 +11,7 @@ import { MessageModule } from 'primeng/message';
 import { AddresService } from '../../../core/services/addres.service';
 import { MessagesService } from '../../../core/services/messages.service';
 import { IAddress } from '../../../core/Interfaces/IAddress';
+import { DeliveryZoneService } from '../../../core/services/delivery-zone.service';
 
 @Component({
   selector: 'app-add-address',
@@ -22,7 +23,10 @@ import { IAddress } from '../../../core/Interfaces/IAddress';
 export class AddAddressComponent implements OnInit {
   addressId: number = 0;
 
+  deliveryZones: any[] = [];
+
   ngOnInit(): void {
+    this.loadDeliveryZones();
     this._Getrourer.paramMap.subscribe((params) => {
       this.addressId = Number(params.get('id'));
 
@@ -44,11 +48,14 @@ export class AddAddressComponent implements OnInit {
   private _router = inject(Router);
   private _address = inject(AddresService);
 
+  private _deliveryZoneService = inject(DeliveryZoneService);
+
   addressForm: FormGroup = this._fb.group({
     firstName: ['', [Validators.required, Validators.minLength(3)]],
     lastName: ['', [Validators.required, Validators.minLength(3)]],
     country: ['Egypt', Validators.required],
     street: ['', Validators.required],
+    building: [''],
     city: ['', Validators.required],
     phone: [
       '',
@@ -56,6 +63,15 @@ export class AddAddressComponent implements OnInit {
     ],
     email: ['', [Validators.required, Validators.email]],
   });
+
+  loadDeliveryZones() {
+    this._deliveryZoneService.GetAllDeliveryZones().subscribe({
+      next: (req: any) => {
+        this.deliveryZones = req.data;
+      },
+      error: (err: any) => console.log('Error loading delivery zones', err),
+    });
+  }
 
   get f() {
     return this.addressForm.controls;

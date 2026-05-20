@@ -1,26 +1,408 @@
-<div class="payment-container">
-  <h2>الدفع الآمن</h2>
+<div class="container mx-auto px-4 py-12 max-w-7xl font-sans text-gray-800">
+  <div class="flex flex-col lg:flex-row gap-12 lg:gap-20">
+    <div class="w-full lg:w-3/5 space-y-10">
+      <form [formGroup]="shippingForm" class="space-y-10">
+        <section>
+          <h2 class="text-xl font-bold text-gray-900 mb-4">
+            Contact information
+          </h2>
+          <div class="space-y-4">
+            <div class="flex flex-col gap-1.5">
+              <label class="text-sm font-medium text-gray-600"
+                >Email address <span class="text-red-500">*</span></label
+              >
+              <input
+                type="email"
+                formControlName="email"
+                class="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-[#4f46e5] focus:border-[#4f46e5] block p-3.5 transition-all outline-none"
+                [ngClass]="{
+                  'border-red-500':
+                    shippingForm.get('email')?.invalid &&
+                    shippingForm.get('email')?.touched,
+                }"
+              />
+            </div>
+          </div>
+        </section>
 
-  <div class="form-group">
-    <label>رقم البطاقة</label>
-    <div id="card-number-element" class="stripe-card-box"></div>
-  </div>
+        <hr class="border-gray-200" />
 
-  <div class="split-group">
-    <div class="form-group">
-      <label>تاريخ الانتهاء</label>
-      <div id="card-expiry-element" class="stripe-card-box"></div>
+        <section>
+          <h2 class="text-xl font-bold text-gray-900 mb-4">
+            Shipping information
+          </h2>
+          <div class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="flex flex-col gap-1.5">
+                <label class="text-sm font-medium text-gray-600"
+                  >First name <span class="text-red-500">*</span></label
+                >
+                <input
+                  type="text"
+                  formControlName="firstName"
+                  class="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-[#4f46e5] focus:border-[#4f46e5] block p-3.5 transition-all outline-none"
+                  [ngClass]="{
+                    'border-red-500':
+                      shippingForm.get('firstName')?.invalid &&
+                      shippingForm.get('firstName')?.touched,
+                  }"
+                />
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label class="text-sm font-medium text-gray-600"
+                  >Last name <span class="text-red-500">*</span></label
+                >
+                <input
+                  type="text"
+                  formControlName="lastName"
+                  class="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-[#4f46e5] focus:border-[#4f46e5] block p-3.5 transition-all outline-none"
+                  [ngClass]="{
+                    'border-red-500':
+                      shippingForm.get('lastName')?.invalid &&
+                      shippingForm.get('lastName')?.touched,
+                  }"
+                />
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+              <label class="text-sm font-medium text-gray-600"
+                >Street Address <span class="text-red-500">*</span></label
+              >
+              <input
+                type="text"
+                formControlName="street"
+                class="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-[#4f46e5] focus:border-[#4f46e5] block p-3.5 transition-all outline-none"
+                [ngClass]="{
+                  'border-red-500':
+                    shippingForm.get('street')?.invalid &&
+                    shippingForm.get('street')?.touched,
+                }"
+              />
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+              <label class="text-sm font-medium text-gray-600"
+                >Building / Appt
+                <span class="text-gray-400 font-normal text-xs"
+                  >(Optional)</span
+                ></label
+              >
+              <input
+                type="text"
+                formControlName="building"
+                class="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-[#4f46e5] focus:border-[#4f46e5] block p-3.5 transition-all outline-none"
+              />
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="flex flex-col gap-1.5">
+                <label class="text-sm font-medium text-gray-600"
+                  >Town / City <span class="text-red-500">*</span></label
+                >
+                <div class="relative">
+                  <select
+                    formControlName="city"
+                    class="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-[#4f46e5] focus:border-[#4f46e5] block p-3.5 transition-all outline-none appearance-none cursor-pointer"
+                    [ngClass]="{
+                      'border-red-500':
+                        shippingForm.get('city')?.invalid &&
+                        shippingForm.get('city')?.touched,
+                    }"
+                  >
+                    <option value="" disabled>Select your Governorate</option>
+                    @for (zone of deliveryZones; track zone.id) {
+                      <option [value]="zone.name">{{ zone.name }}</option>
+                    }
+                  </select>
+                  <div
+                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500"
+                  >
+                    <i class="pi pi-angle-down"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex flex-col gap-1.5">
+                <label class="text-sm font-medium text-gray-600"
+                  >Country <span class="text-red-500">*</span></label
+                >
+                <select
+                  formControlName="country"
+                  class="w-full bg-gray-50 border border-gray-300 text-gray-500 text-sm rounded-lg block p-3.5 transition-all outline-none appearance-none cursor-not-allowed"
+                >
+                  <option value="Egypt">Egypt</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+              <label class="text-sm font-medium text-gray-600"
+                >Phone <span class="text-red-500">*</span></label
+              >
+              <input
+                type="tel"
+                formControlName="phone"
+                placeholder="01xxxxxxxxx"
+                class="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-[#4f46e5] focus:border-[#4f46e5] block p-3.5 transition-all outline-none"
+                [ngClass]="{
+                  'border-red-500':
+                    shippingForm.get('phone')?.invalid &&
+                    shippingForm.get('phone')?.touched,
+                }"
+              />
+            </div>
+          </div>
+        </section>
+      </form>
+
+      <hr class="border-gray-200" />
+
+      <section>
+        <h2 class="text-xl font-bold text-gray-900 mb-4">Payment</h2>
+        <p class="text-sm text-gray-500 mb-4">
+          All transactions are secure and encrypted.
+        </p>
+
+        <div
+          class="border border-gray-300 rounded-xl overflow-hidden shadow-sm"
+        >
+          <label
+            class="flex items-center gap-4 p-4 cursor-pointer transition-colors"
+            [ngClass]="
+              selectedPaymentMethod === 'card'
+                ? 'bg-[#4f46e5]/5'
+                : 'bg-white hover:bg-gray-50'
+            "
+            (click)="setPaymentMethod('card')"
+          >
+            <div
+              class="w-4 h-4 rounded-full border-4 flex items-center justify-center bg-white transition-colors"
+              [ngClass]="
+                selectedPaymentMethod === 'card'
+                  ? 'border-[#4f46e5]'
+                  : 'border-gray-300'
+              "
+            ></div>
+            <div class="flex flex-col">
+              <span class="font-bold text-gray-900">Credit card</span>
+              <span class="text-xs text-gray-500"
+                >Pay securely with Visa or Mastercard</span
+              >
+            </div>
+          </label>
+
+          <div
+            *ngIf="selectedPaymentMethod === 'card'"
+            class="p-5 border-t border-gray-200 bg-[#4f46e5]/5 space-y-4"
+          >
+            <div class="flex flex-col gap-1.5">
+              <label class="text-sm font-medium text-gray-600"
+                >Card number</label
+              >
+              <div
+                id="card-number-element"
+                class="w-full bg-white border border-gray-300 rounded-lg p-3.5 shadow-sm"
+              ></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="flex flex-col gap-1.5">
+                <label class="text-sm font-medium text-gray-600"
+                  >Expiration date (MM/YY)</label
+                >
+                <div
+                  id="card-expiry-element"
+                  class="w-full bg-white border border-gray-300 rounded-lg p-3.5 shadow-sm"
+                ></div>
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label class="text-sm font-medium text-gray-600"
+                  >Security code (CVC)</label
+                >
+                <div
+                  id="card-cvc-element"
+                  class="w-full bg-white border border-gray-300 rounded-lg p-3.5 shadow-sm"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <label
+            class="flex items-center gap-4 p-4 border-t border-gray-300 cursor-pointer transition-colors"
+            [ngClass]="
+              selectedPaymentMethod === 'cash'
+                ? 'bg-[#4f46e5]/5'
+                : 'bg-white hover:bg-gray-50'
+            "
+            (click)="setPaymentMethod('cash')"
+          >
+            <div
+              class="w-4 h-4 rounded-full border-4 flex items-center justify-center bg-white transition-colors"
+              [ngClass]="
+                selectedPaymentMethod === 'cash'
+                  ? 'border-[#4f46e5]'
+                  : 'border-gray-300'
+              "
+            ></div>
+            <div class="flex flex-col">
+              <span class="font-bold text-gray-900"
+                >Cash on Delivery (COD)</span
+              >
+              <span class="text-xs text-gray-500"
+                >Pay with cash upon delivery</span
+              >
+            </div>
+          </label>
+
+          <div
+            *ngIf="selectedPaymentMethod === 'cash'"
+            class="p-5 border-t border-gray-200 bg-gray-50 text-center text-sm text-gray-600"
+          >
+            <i class="pi pi-info-circle mr-1"></i> You will pay the delivery
+            captain when receiving your order.
+          </div>
+        </div>
+      </section>
     </div>
 
-    <div class="form-group">
-      <label>الرقم السري (CVC)</label>
-      <div id="card-cvc-element" class="stripe-card-box"></div>
+    <div class="w-full lg:w-2/5">
+      <div
+        class="sticky top-24 bg-gray-50 border border-gray-200 rounded-2xl p-6 md:p-8"
+      >
+        <h2 class="text-lg font-bold text-gray-900 mb-6">Order summary</h2>
+
+        <div
+          class="space-y-6 mb-8 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar"
+        >
+          @for (item of cartDetails; track item.productId) {
+            <div class="flex gap-4 items-start group">
+              <div
+                class="w-20 h-20 bg-white rounded-lg border border-gray-200 p-2 flex-shrink-0 relative"
+              >
+                <button
+                  (click)="removeItem(item)"
+                  class="absolute -top-2 -right-2 w-6 h-6 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 shadow-sm transition-colors opacity-0 group-hover:opacity-100"
+                >
+                  <i class="pi pi-times text-[10px]"></i>
+                </button>
+                <img
+                  [src]="item.productImage"
+                  class="w-full h-full object-contain"
+                />
+              </div>
+
+              <div class="flex-1 flex flex-col justify-between h-20">
+                <div class="flex justify-between items-start">
+                  <h3
+                    class="font-medium text-gray-900 text-sm line-clamp-2 pr-2"
+                  >
+                    {{ item.productName }}
+                  </h3>
+                  <span
+                    class="font-bold text-gray-900 text-sm whitespace-nowrap"
+                  >
+                    @if (item.priceAfterDiscount) {
+                      {{ item.priceAfterDiscount | number: "1.2-2" }}
+                    } @else {
+                      {{ item.productPrice | number: "1.2-2" }}
+                    }
+                  </span>
+                </div>
+
+                <div
+                  class="flex items-center justify-between w-24 bg-white rounded-full p-1 border border-gray-200 shadow-sm mt-auto"
+                >
+                  <button
+                    (click)="decreaseQuantity(item)"
+                    [disabled]="item.quantity <= 1"
+                    class="w-6 h-6 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    <i class="pi pi-minus text-[10px]"></i>
+                  </button>
+                  <span class="font-bold text-xs">{{ item.quantity }}</span>
+                  <button
+                    (click)="increaseQuantity(item)"
+                    [disabled]="item.quantity >= item.stock"
+                    class="w-6 h-6 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    <i class="pi pi-plus text-[10px]"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+        <hr class="border-gray-200 mb-6" />
+
+        <div class="mb-6 flex gap-3">
+          <input
+            type="text"
+            name="userCoupon"
+            placeholder="Discount code or gift card"
+            [(ngModel)]="UserCoupon"
+            class="flex-1 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-[#4f46e5] focus:border-[#4f46e5] block p-3.5 transition-all outline-none"
+          />
+          <button
+            type="button"
+            class="bg-gray-200 hover:bg-gray-300 text-gray-600 font-bold px-5 py-3.5 rounded-lg transition-colors text-sm"
+            (click)="GetCoupon(UserCoupon)"
+          >
+            Apply
+          </button>
+        </div>
+
+        <hr class="border-gray-200 mb-6" />
+
+        <div class="space-y-3 mb-6 text-sm">
+          <div class="flex justify-between text-gray-600">
+            <span>Subtotal</span>
+            <span class="font-medium text-gray-900"
+              >{{ cartTotal | number: "1.2-2" }} EGP</span
+            >
+          </div>
+          <div class="flex justify-between text-gray-600">
+            <span>Shipping</span>
+            @if (shippingCost === 0) {
+              <span class="font-medium text-green-600">Free</span>
+            } @else {
+              <span class="font-medium text-gray-900"
+                >{{ shippingCost }} EGP</span
+              >
+            }
+          </div>
+
+          @if (DiscountAmount > 0) {
+            <div class="flex justify-between text-green-600 font-medium">
+              <span class="flex items-center gap-1">
+                <i class="pi pi-tag text-xs"></i> Discount
+              </span>
+              <span>- {{ DiscountAmount | number: "1.2-2" }} EGP</span>
+            </div>
+          }
+        </div>
+
+        <hr class="border-gray-200 mb-6" />
+
+        <div class="flex justify-between items-center mb-8">
+          <span class="text-base font-bold text-gray-900">Total</span>
+          <span class="text-2xl font-black text-gray-900">
+            {{ finalTotal | number: "1.2-2" }}
+            <span class="text-sm font-medium text-gray-500">EGP</span>
+          </span>
+        </div>
+
+        <button
+          (click)="pay()"
+          [disabled]="
+            (!stripeReady && selectedPaymentMethod === 'card') ||
+            cartDetails.length === 0
+          "
+          class="w-full bg-[#4f46e5] hover:bg-[#4338ca] text-white font-bold py-4 rounded-lg transition-all shadow-md active:scale-95 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        >
+          Confirm order
+        </button>
+      </div>
     </div>
   </div>
-
-  <button (click)="pay()" [disabled]="!stripeReady">ادفع الآن</button>
-
-  @if (errorMessage) {
-    <p class="error-msg">{{ errorMessage }}</p>
-  }
 </div>
