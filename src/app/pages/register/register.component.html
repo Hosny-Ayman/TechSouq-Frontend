@@ -7,9 +7,18 @@
       Create an Account
     </h1>
 
+    <div class="flex justify-center mb-6 w-full">
+      <asl-google-signin-button
+        type="standard"
+        size="large"
+        [width]="350"
+      ></asl-google-signin-button>
+    </div>
+
+    <p-divider align="center"><b>OR</b></p-divider>
+
     <form
       [formGroup]="userData"
-      action=""
       class="flex flex-col gap-4"
       (submit)="submit()"
     >
@@ -45,17 +54,9 @@
               ></p-message>
             </div>
           }
-          @if (FirstName?.getError("maxlength")) {
-            <div class="w-[95%] mx-auto mt-2">
-              <p-message
-                severity="error"
-                text="cannot exceed 30 char"
-                styleClass="w-full justify-center"
-              ></p-message>
-            </div>
-          }
         }
       </div>
+
       <p-inputGroup>
         <p-inputGroupAddon>
           <i class="pi pi-user"></i>
@@ -67,6 +68,7 @@
           class="w-full text-center text-lg border border-gray-300 p-2 rounded focus:outline-none focus:border-blue-500"
         />
       </p-inputGroup>
+
       <div class="validation-smg">
         @if (SecondName?.dirty && SecondName?.touched) {
           @if (SecondName?.getError("required")) {
@@ -78,29 +80,9 @@
               ></p-message>
             </div>
           }
-          @if (SecondName?.getError("minlength")) {
-            <div class="w-[95%] mx-auto mt-2">
-              <p-message
-                severity="error"
-                text="must be at least 3 char"
-                styleClass="w-full justify-center"
-              ></p-message>
-            </div>
-          }
-          @if (SecondName?.getError("maxlength")) {
-            <div class="w-[95%] mx-auto mt-2">
-              <p-message
-                severity="error"
-                text="cannot exceed 30 char"
-                styleClass="w-full justify-center"
-              ></p-message>
-            </div>
-          }
         }
       </div>
-      <div>
-        <div class="card"></div>
-      </div>
+
       <p-inputGroup>
         <p-inputGroupAddon>
           <i class="pi pi-envelope"></i>
@@ -124,11 +106,14 @@
               ></p-message>
             </div>
           }
+        }
+
+        @if (email?.touched && email?.dirty) {
           @if (email?.getError("email")) {
             <div class="w-[95%] mx-auto mt-2">
               <p-message
                 severity="error"
-                text="Email Not Valid"
+                text="Invalid Email Format"
                 styleClass="w-full justify-center"
               ></p-message>
             </div>
@@ -142,28 +127,26 @@
         </p-inputGroupAddon>
         <p-password
           [toggleMask]="true"
-          name="password"
           formControlName="password"
           placeholder="Password"
           styleClass="w-full"
-          inputStyleClass="w-full text-center text-lg  border border-gray-300 p-2 rounded focus:outline-none focus:border-blue-500"
+          inputStyleClass="w-full text-center text-lg border border-gray-300 p-2 rounded focus:outline-none focus:border-blue-500"
         >
-          <ng-template pTemplate="header">
-            <h6>Pick a password</h6>
-          </ng-template>
-
           <ng-template pTemplate="footer">
             <p-divider />
-            <p class="mt-2">Suggestions</p>
-            <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
-              <li>At least one lowercase</li>
-              <li>At least one uppercase</li>
-              <li>At least one numeric</li>
+            <p class="mt-2 text-sm font-bold">Suggestions</p>
+            <ul
+              class="pl-2 ml-2 mt-0 text-xs text-gray-500"
+              style="line-height: 1.5"
+            >
+              <li>At least one lowercase & uppercase</li>
+              <li>At least one numeric & special char</li>
               <li>Minimum 8 characters</li>
             </ul>
           </ng-template>
         </p-password>
       </p-inputGroup>
+
       <div class="validation-msg">
         @if (password?.dirty && password?.touched) {
           @if (password?.getError("required")) {
@@ -175,33 +158,15 @@
               ></p-message>
             </div>
           }
-          @if (password?.getError("minlength")) {
+          @if (password?.getError("pattern")) {
             <div class="w-[95%] mx-auto mt-2">
               <p-message
                 severity="error"
-                text="Must be at Least 8 char"
-                styleClass="w-full justify-center"
+                text="Invalid password format"
+                styleClass="w-full flex justify-start text-xs"
               ></p-message>
             </div>
           }
-          @if (password?.getError("maxlength")) {
-            <div class="w-[95%] mx-auto mt-2">
-              <p-message
-                severity="error"
-                text="cannot exceed 20 char"
-                styleClass="w-full justify-center"
-              ></p-message>
-            </div>
-          }
-        }
-        @if (password?.getError("pattern")) {
-          <div class="w-[95%] mx-auto mt-2">
-            <p-message
-              severity="error"
-              text="Password must contain at least one uppercase, lowercase, number, and special character"
-              styleClass="w-full flex justify-start"
-            ></p-message>
-          </div>
         }
       </div>
 
@@ -211,20 +176,23 @@
       >
         Register
       </button>
-      <h4>
-        Already have account ?
+
+      <h4 class="text-center">
+        Already have account?
         <a routerLink="/Login" class="font-bold text-blue-700 underline"
           >Log in</a
         >
       </h4>
     </form>
   </div>
+
   <ngx-spinner
     bdColor="rgba(0, 0, 0, 0.8)"
     size="medium"
     color="#ff0000"
     type="triangle-skew-spin"
     [fullScreen]="true"
-    ><p style="color: white">Loading...</p></ngx-spinner
   >
+    <p style="color: white">Loading...</p>
+  </ngx-spinner>
 </div>

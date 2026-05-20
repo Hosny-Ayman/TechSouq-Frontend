@@ -1,61 +1,62 @@
-import { ILogin } from './../../../core/Interfaces/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   FormBuilder,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { PasswordModule } from 'primeng/password';
-import { DividerModule } from 'primeng/divider';
-import { MenubarModule } from 'primeng/menubar';
+import { Router, RouterModule } from '@angular/router';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import { ToastModule } from 'primeng/toast';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
-import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
-import { Message } from 'primeng/api';
-import { MessagesModule } from 'primeng/messages';
-import { MessagesService } from '../../../core/services/messages.service';
-import { MessageModule } from 'primeng/message';
+import { PasswordModule } from 'primeng/password';
+import { DividerModule } from 'primeng/divider';
 import { AuthService } from '../../../core/services/auth.service';
-import { ToastModule } from 'primeng/toast';
+import { MessagesService } from '../../../core/services/messages.service';
+import { ILogin } from '../../../core/Interfaces/http';
+import {
+  SocialAuthService,
+  GoogleSigninButtonModule,
+} from '@abacritt/angularx-social-login';
 
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [
-    FormsModule,
-    PasswordModule,
-    DividerModule,
-    MenubarModule,
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    NgxSpinnerModule,
+    ToastModule,
+    MessagesModule,
+    MessageModule,
     InputGroupModule,
     InputGroupAddonModule,
     InputTextModule,
-    NgxSpinnerModule,
-    ReactiveFormsModule,
-    MessagesModule,
-    MessageModule,
-    ToastModule,
+    PasswordModule,
+    DividerModule,
+    GoogleSigninButtonModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
 export class RegisterComponent implements OnInit {
   userData!: FormGroup;
-  value!: string;
-
-  messages: Message[] = [];
-
-  ngOnInit() {
-    this.messages = [{ severity: 'info', detail: 'Message Content' }];
-  }
+  platformId = inject(PLATFORM_ID);
+  isBrowser = isPlatformBrowser(this.platformId);
 
   constructor(
     private _authService: AuthService,
     private _MyMessage: MessagesService,
     private _ShowSpinner: NgxSpinnerService,
     private _formBuilder: FormBuilder,
+    private _router: Router,
+    private _socialAuthService: SocialAuthService,
   ) {
     this.userData = _formBuilder.group({
       FirstName: [
@@ -89,6 +90,28 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  ngOnInit() {
+    if (this.isBrowser) {
+      this._socialAuthService.authState.subscribe();
+      this._socialAuthService.authState.subscribe((user) => {
+        if (user) {
+          this._ShowSpinner.show();
+          this._authService.GoogleLogin({ idToken: user.idToken }).subscribe({
+            next: () => {
+              this._ShowSpinner.hide();
+              this._MyMessage.showSuccess('Registered successfully!');
+              this._router.navigate(['/User']);
+            },
+            error: () => {
+              this._ShowSpinner.hide();
+              this._MyMessage.showError('Google Registration failed.');
+            },
+          });
+        }
+      });
+    }
+  }
+
   get FirstName() {
     return this.userData.get('FirstName');
   }
@@ -108,14 +131,11 @@ export class RegisterComponent implements OnInit {
       this.signUp(this.userData.value);
     } else {
       this.userData.markAllAsTouched();
-      Object.keys(this.userData.controls).forEach((control) =>
-        this.userData.controls[control].markAsDirty(),
-      );
     }
   }
 
   signUp(formData: any): void {
-    const finalDataToSedn = {
+    const finalDataToSend = {
       firstname: formData.FirstName,
       secondname: formData.SecondName,
       email: formData.email,
@@ -123,22 +143,14 @@ export class RegisterComponent implements OnInit {
       roleId: 2,
     };
 
-    this._authService.register(finalDataToSedn).subscribe({
-      next: (respons: any) => {
-        console.log('Register Successfuly', respons);
-        const login: ILogin = {
-          email: finalDataToSedn.email,
-          password: finalDataToSedn.password,
-        };
-
-        this._authService.signUp(login);
-
-        // this._MyMessage.showSuccess('Register Successfuly');
-        // this._ShowSpinner.hide();
+    this._authService.register(finalDataToSend).subscribe({
+      next: () => {
+        this._authService.signUp({
+          email: finalDataToSend.email,
+          password: finalDataToSend.password,
+        });
       },
-      error: (err) => {
-        console.log('Login Failed', err);
-
+      error: () => {
         this._MyMessage.showError('Unexpected Error Try Again Later');
         this._ShowSpinner.hide();
       },

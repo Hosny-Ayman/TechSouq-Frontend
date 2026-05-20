@@ -72,10 +72,8 @@ export class AuthNavComponent {
   }
 
   onInputClear(value: string) {
-    // لو الـ input بقى فاضي، هنفضي كلمة البحث من السيرفيس فوراً
     if (value.trim() === '') {
       this._Products.changeSearchTerm('');
-      // مش بنعمل navigate هنا عشان مش عايزينه ينط لصفحة الهوم بمجرد إنه بيمسح الكلام
     }
   }
   loadCart() {
@@ -84,14 +82,13 @@ export class AuthNavComponent {
         next: (res: any) => {
           console.log('CartItem', res.data);
           this.CartItems = res.data;
-          // خد بالك: طالما إنت بتجيب GetCartItems (السلة كلها)، يبقى res.data عبارة عن مصفوفة، فهنعد الـ length بتاعها
           const count = res.data ? res.data.length : 0;
-          this._cart.ShowCartItems(count); // 👈 لازم تنادي دي عشان تفوق البادج
+          this._cart.ShowCartItems(count);
         },
       });
     } else {
       const cart = this._cart.getCartAnonymousCkient();
-      this._cart.ShowCartItems(cart.length); // 👈 وهنا كمان
+      this._cart.ShowCartItems(cart.length);
     }
   }
 
