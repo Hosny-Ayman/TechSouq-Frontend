@@ -15,7 +15,7 @@ import {
 import { RouterLink, RouterModule } from '@angular/router';
 import { CommonModule, DecimalPipe, isPlatformBrowser } from '@angular/common';
 import { AuthService } from '../../../../core/services/auth.service';
-import { MessagesService } from '../../../../core/services/messages.service'; // ضفت الميسج سيرفس عشان لو عايز تطلع ايرور
+import { MessagesService } from '../../../../core/services/messages.service';
 import { UtilityService } from '../../../../core/services/utility.service';
 import { AddresService } from '../../../../core/services/addres.service';
 import { SystemSettingService } from '../../../../core/services/system-setting.service';
@@ -197,6 +197,10 @@ export class CartComponent implements OnInit, OnDestroy {
     } else {
       this._router.navigate(['/Login']);
     }
+  }
+
+  getImageUrl(fileName: string, imagePath: string): string {
+    return this._utility.getImageUrl(fileName, imagePath);
   }
 
   ngOnDestroy(): void {

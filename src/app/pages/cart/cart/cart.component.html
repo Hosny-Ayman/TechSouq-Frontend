@@ -41,7 +41,7 @@
                   class="w-20 h-20 bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-center p-2 flex-shrink-0"
                 >
                   <img
-                    [src]="item.productImage"
+                    [src]="getImageUrl('ProductImages', item.productImage)"
                     [alt]="item.productName"
                     class="max-w-full max-h-full object-contain"
                   />

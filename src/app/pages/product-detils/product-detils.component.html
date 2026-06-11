@@ -10,17 +10,23 @@
             !ProductDetails.images.includes(ProductDetails.firstImage)
           ) {
             <div
-              (click)="changeImage(ProductDetails.firstImage)"
+              (click)="
+                changeImage(
+                  getImageUrl('ProductImages', ProductDetails.firstImage)
+                )
+              "
               [class.border-[#db4444]]="
-                selectedImage === ProductDetails.firstImage
+                selectedImage ===
+                getImageUrl('ProductImages', ProductDetails.firstImage)
               "
               [class.border-transparent]="
-                selectedImage !== ProductDetails.firstImage
+                selectedImage !==
+                getImageUrl('ProductImages', ProductDetails.firstImage)
               "
               class="w-24 h-24 bg-gray-50 p-2 rounded-xl flex-shrink-0 cursor-pointer border-2 transition-all duration-300 hover:shadow-md"
             >
               <img
-                [src]="ProductDetails.firstImage"
+                [src]="getImageUrl('ProductImages', ProductDetails.firstImage)"
                 class="w-full h-full object-contain mix-blend-multiply"
                 [alt]="ProductDetails.name"
               />
@@ -30,12 +36,16 @@
           @for (Image of ProductDetails.images; track $index) {
             <div
               (click)="changeImage(Image)"
-              [class.border-[#db4444]]="selectedImage === Image"
-              [class.border-transparent]="selectedImage !== Image"
+              [class.border-[#db4444]]="
+                selectedImage === getImageUrl('ProductImages', Image)
+              "
+              [class.border-transparent]="
+                selectedImage !== getImageUrl('ProductImages', Image)
+              "
               class="w-24 h-24 bg-gray-50 p-2 rounded-xl flex-shrink-0 cursor-pointer border-2 transition-all duration-300 hover:shadow-md"
             >
               <img
-                [src]="Image"
+                [src]="getImageUrl('ProductImages', Image)"
                 class="w-full h-full object-contain mix-blend-multiply"
                 [alt]="ProductDetails.name"
               />
@@ -55,9 +65,7 @@
           }
 
           <img
-            [src]="
-              selectedImage || 'https://placehold.co/600x600?text=No+Image'
-            "
+            [src]="getImageUrl('ProductImages', selectedImage)"
             class="max-w-full max-h-[400px] object-contain transition-transform duration-500 group-hover:scale-110 mix-blend-multiply"
             [alt]="ProductDetails.name"
           />

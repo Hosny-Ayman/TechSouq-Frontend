@@ -29,11 +29,19 @@ import { SystemSettingService } from '../../../core/services/system-setting.serv
 import { CouponService } from '../../../core/services/coupon.service';
 import { ShowCoupon } from '../../../core/Interfaces/ICoupon';
 import { ConfirmOrder } from '../../../core/Interfaces/IConfirmOrder';
+import { Router } from '@angular/router';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-payment',
   standalone: true,
-  imports: [CommonModule, DecimalPipe, ReactiveFormsModule, FormsModule],
+  imports: [
+    CommonModule,
+    DecimalPipe,
+    ReactiveFormsModule,
+    FormsModule,
+    ProgressSpinnerModule,
+  ],
   templateUrl: './payment.component.html',
   styleUrl: './payment.component.css',
 })
@@ -63,6 +71,8 @@ export class PaymentComponent implements OnInit, OnDestroy {
   public Coupon: ShowCoupon | null = null;
   public DiscountAmount: number = 0;
 
+  public isProcessing: boolean = false;
+
   public selectedPaymentMethod: 'card' | 'cash' = 'card';
 
   platFormId = inject(PLATFORM_ID);
@@ -78,6 +88,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
   private _fb = inject(FormBuilder);
   private _Setting = inject(SystemSettingService);
   private _CouponService = inject(CouponService);
+  private _router = inject(Router);
 
   shippingForm: FormGroup = this._fb.group({
     firstName: ['', [Validators.required, Validators.minLength(3)]],
@@ -132,7 +143,6 @@ export class PaymentComponent implements OnInit, OnDestroy {
     this.setupStripeCard();
   }
 
-  // 👈 دالة تغيير طريقة الدفع
   setPaymentMethod(method: 'card' | 'cash') {
     this.selectedPaymentMethod = method;
   }
@@ -205,9 +215,15 @@ export class PaymentComponent implements OnInit, OnDestroy {
           this._message.showSuccess(
             'ألف مبروك! تم تسجيل الطلب الدفع عند الاستلام بنجاح.',
           );
+          this.isProcessing = true;
+          setTimeout(() => {
+            this.isProcessing = false;
+            this._router.navigate(['/User/Order']);
+          }, 3000);
         },
         error: (err: any) => {
           this._message.showError('حدث خطاء اثناء تسجيل الطلب حاول لاحقا');
+          this.isProcessing = false;
         },
       });
       return;
@@ -239,12 +255,17 @@ export class PaymentComponent implements OnInit, OnDestroy {
         } else {
           if (result.paymentIntent?.status === 'succeeded') {
             this._message.showSuccess('ألف مبروك! الدفع تم بنجاح.');
-            // (TODO) هنا هتبعت بيانات الأوردر للباك إند وتقوله إن الدفع فيزا
+            this.isProcessing = true;
+            setTimeout(() => {
+              this.isProcessing = false;
+              this._router.navigate(['/User/Order']);
+            }, 3000);
           }
         }
       },
       error: (err: any) => {
         this._message.showError('CreatePaymentIntent Failed');
+        this.isProcessing = false;
       },
     });
   }
@@ -447,6 +468,10 @@ export class PaymentComponent implements OnInit, OnDestroy {
 
   get finalTotal(): number {
     return this.cartTotal + this.shippingCost - this.DiscountAmount;
+  }
+
+  getImageUrl(fileName: string, imagePath: string): string {
+    return this._utility.getImageUrl(fileName, imagePath);
   }
 
   ngOnDestroy(): void {

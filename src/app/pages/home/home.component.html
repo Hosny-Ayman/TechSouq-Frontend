@@ -45,7 +45,7 @@
           class="relative w-full h-[250px] lg:h-[400px] bg-[#F5F5F5] rounded-lg cursor-pointer overflow-hidden flex items-center justify-center group"
         >
           <img
-            [src]="item.itemImageSrc"
+            [src]="getImageUrl('ProductImages', item.itemImageSrc)"
             [alt]="item.alt"
             class="max-w-full max-h-full object-contain p-8 transition-transform duration-500 group-hover:scale-105"
           />
@@ -115,7 +115,7 @@
         (click)="selectCategory(categorie.name)"
       >
         <img
-          [src]="categorie.imageUrl"
+          [src]="getImageUrl('categories', categorie.imageUrl)"
           [alt]="categorie.name"
           class="w-14 h-14 mb-4 object-contain transition-opacity"
           [ngClass]="
@@ -170,11 +170,7 @@
           }
 
           <img
-            [src]="
-              product.firstImage
-                ? product.firstImage
-                : 'https://placehold.co/400x400?text=No+Image'
-            "
+            [src]="getImageUrl('ProductImages', product.firstImage)"
             [alt]="product.name"
             class="max-h-full max-w-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-110"
             [ngClass]="{ 'opacity-50 grayscale': product.stock === 0 }"

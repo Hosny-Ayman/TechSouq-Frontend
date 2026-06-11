@@ -30,4 +30,15 @@ export class UtilityService {
       localStorage.removeItem(key);
     }
   }
+
+  getImageUrl(fileName: string, imagePath: string): string {
+    if (!imagePath)
+      return 'https://placehold.co/150x150/292929/FFF?text=No+Image';
+
+    if (imagePath.startsWith('http')) return imagePath;
+
+    const Image = imagePath.split('/').pop();
+
+    return 'https://localhost:7180/' + fileName + '/' + Image;
+  }
 }

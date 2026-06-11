@@ -1,13 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule, DecimalPipe, DatePipe } from '@angular/common'; // ضفنا الـ DatePipe هنا
+import { CommonModule, DecimalPipe, DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { IOrder } from '../../../core/Interfaces/IOrder';
 import { OrderService } from '../../../core/services/order.service';
+import { UtilityService } from '../../../core/services/utility.service';
 
 @Component({
   selector: 'app-order-summarie',
   standalone: true,
-  imports: [CommonModule, DecimalPipe, DatePipe, RouterModule], // ضفناه في الـ imports
+  imports: [CommonModule, DecimalPipe, DatePipe, RouterModule],
   templateUrl: './order-summarie.component.html',
   styleUrl: './order-summarie.component.css',
 })
@@ -15,6 +16,7 @@ export class OrderSummarieComponent implements OnInit {
   orders: IOrder[] = [];
 
   _Order = inject(OrderService);
+  _utility = inject(UtilityService);
 
   ngOnInit() {
     this.loadOrders();
@@ -56,6 +58,10 @@ export class OrderSummarieComponent implements OnInit {
       default:
         return '0%';
     }
+  }
+
+  getImageUrl(fileName: string, imagePath: string): string {
+    return this._utility.getImageUrl(fileName, imagePath);
   }
 
   isStepCompleted(currentStatus: string, step: string): boolean {

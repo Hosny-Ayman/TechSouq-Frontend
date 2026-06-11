@@ -12,7 +12,6 @@ import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { MessageService } from 'primeng/api';
 import { isPlatformBrowser } from '@angular/common';
 
-// Imports مكتبة جوجل
 import {
   SocialAuthServiceConfig,
   GoogleLoginProvider,
@@ -26,14 +25,12 @@ export const appConfig: ApplicationConfig = {
     MessageService,
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
 
-    // 👇 الحل الجذري للـ Bug وللـ SSR
     {
       provide: 'SocialAuthServiceConfig',
       useFactory: () => {
         const platformId = inject(PLATFORM_ID);
         const isBrowser = isPlatformBrowser(platformId);
 
-        // لو إحنا في البراوزر (شاشة العميل)، شغل جوجل عادي
         if (isBrowser) {
           return {
             autoLogin: false,
@@ -51,7 +48,6 @@ export const appConfig: ApplicationConfig = {
           } as SocialAuthServiceConfig;
         }
 
-        // لو إحنا في السيرفر (SSR)، رجع إعدادات فاضية عشان ميكرش ويجيب شاشة بيضا
         return {
           autoLogin: false,
           providers: [],

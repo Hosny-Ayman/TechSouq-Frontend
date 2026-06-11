@@ -23,6 +23,7 @@ import { CartService } from '../../../core/services/cart.service';
 import { ICategorie, IData } from '../../../core/Interfaces/ICategorie';
 import { CategorieService } from '../../../core/services/categorie.service';
 import { MessagesService } from '../../../core/services/messages.service';
+import { UtilityService } from '../../../core/services/utility.service';
 
 @Component({
   selector: 'app-home',
@@ -41,7 +42,6 @@ import { MessagesService } from '../../../core/services/messages.service';
 export class HomeComponent implements OnInit, OnDestroy {
   CartItmesAndProducts!: ICartItemsAndProductsDetails[];
 
-  // Set عشان يشيل الـ IDs بتاعت المنتجات اللي في السلة
   cartProductIds: Set<number> = new Set<number>();
 
   private updateSubject = new Subject<void>();
@@ -75,6 +75,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private _cart: CartService,
     private _categorie: CategorieService,
     private _message: MessagesService,
+    private _utility: UtilityService,
   ) {}
 
   ngOnInit() {
@@ -256,6 +257,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   hasDiscount(product: Product): boolean {
     return this._Products.hasDiscount(product);
+  }
+
+  getImageUrl(fileName: string, imagePath: string): string {
+    return this._utility.getImageUrl(fileName, imagePath);
   }
 
   getDiscountPercentage(product: Product): number {

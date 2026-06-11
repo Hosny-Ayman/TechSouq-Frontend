@@ -16,6 +16,8 @@ import { ICartItems } from '../../../core/Interfaces/icart-items';
 import { AuthService } from '../../../core/services/auth.service';
 import { Subject, takeUntil } from 'rxjs';
 import { ProductReviewService } from '../../../core/services/product-review.service';
+import { UtilityService } from '../../../core/services/utility.service';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-product-detils',
@@ -57,6 +59,7 @@ export class ProductDetilsComponent implements OnInit, OnDestroy {
     private _message: MessagesService,
     public _auth: AuthService,
     private _review: ProductReviewService,
+    private _utility: UtilityService,
   ) {}
 
   ngOnInit(): void {
@@ -272,6 +275,9 @@ export class ProductDetilsComponent implements OnInit, OnDestroy {
         },
       });
     }
+  }
+  getImageUrl(fileName: string, imagePath: string): string {
+    return this._utility.getImageUrl(fileName, imagePath);
   }
 
   ngOnDestroy(): void {

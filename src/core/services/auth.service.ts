@@ -64,7 +64,8 @@ export class AuthService {
             this.currentUser.next(res.data);
 
             if (isPlatformBrowser(this.platformId)) {
-              localStorage.setItem('userData', JSON.stringify(res.data));
+              const { id, ...UserWithOutId } = res.data;
+              localStorage.setItem('userData', JSON.stringify(UserWithOutId));
 
               const cart = this.injected.get(CartService);
 

@@ -1,4 +1,10 @@
-import { Component, OnInit, inject, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  PLATFORM_ID,
+  OnDestroy, // 👈 متنساش دي
+} from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   FormBuilder,
@@ -25,6 +31,7 @@ import {
   SocialAuthService,
   GoogleSigninButtonModule,
 } from '@abacritt/angularx-social-login';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -47,10 +54,12 @@ import {
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   userData!: FormGroup;
   platformId = inject(PLATFORM_ID);
   isBrowser = isPlatformBrowser(this.platformId);
+
+  private _authSubscription!: Subscription;
 
   constructor(
     private _router: Router,
@@ -69,23 +78,32 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     if (this.isBrowser) {
-      this._socialAuthService.authState.subscribe();
-      this._socialAuthService.authState.subscribe((user) => {
-        if (user) {
-          this._ShowSpinner.show();
-          this._authService.GoogleLogin({ idToken: user.idToken }).subscribe({
-            next: (res: any) => {
-              this._ShowSpinner.hide();
-              this._MyMessage.showSuccess('Logged in successfully via Google!');
-              this._router.navigate(['/User']);
-            },
-            error: (err: any) => {
-              this._ShowSpinner.hide();
-              this._MyMessage.showError('Google Login failed.');
-            },
-          });
-        }
-      });
+      this._authSubscription = this._socialAuthService.authState.subscribe(
+        (user) => {
+          if (user) {
+            this._ShowSpinner.show();
+            this._authService.GoogleLogin({ idToken: user.idToken }).subscribe({
+              next: (res: any) => {
+                this._ShowSpinner.hide();
+                this._MyMessage.showSuccess(
+                  'Logged in successfully via Google!',
+                );
+                this._router.navigate(['/User']);
+              },
+              error: (err: any) => {
+                this._ShowSpinner.hide();
+                this._MyMessage.showError('Google Login failed.');
+              },
+            });
+          }
+        },
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    if (this._authSubscription) {
+      this._authSubscription.unsubscribe();
     }
   }
 
