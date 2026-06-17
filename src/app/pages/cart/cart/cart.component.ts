@@ -57,12 +57,9 @@ export class CartComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this._Setting.GetSystemSettingByKey('FreeShippingThreshold').subscribe({
       next: (req: any) => {
-        console.log('get System Setting Successfully', req);
         this.FreeShippingShould = Number(req.data.settingValue);
       },
-      error: (err: any) => {
-        console.log('get System Setting Failed', err);
-      },
+      error: (err: any) => {},
     });
 
     this.loadCartDetails();
@@ -81,14 +78,11 @@ export class CartComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (req: any) => {
-            console.log('Data loaded inside Cart Component!', req.data);
             this.cartDetails = req.data;
             this._cart.ShowCartItems(this.cartDetails.length);
             this.CalculateShipping();
           },
-          error: (err: any) => {
-            console.log('Error loading cart details', err);
-          },
+          error: (err: any) => {},
         });
     } else {
       if (this.isbrowser) {
@@ -138,12 +132,9 @@ export class CartComponent implements OnInit, OnDestroy {
 
     this._cart.UpdateCart(payloadForApi).subscribe({
       next: (req: any) => {
-        console.log('Update ItemsCard Successfully', req);
         this.CalculateShipping();
       },
-      error: (err: any) => {
-        console.log('Update ItemsCard failed', err);
-      },
+      error: (err: any) => {},
     });
   }
 
@@ -154,13 +145,10 @@ export class CartComponent implements OnInit, OnDestroy {
 
     this._cart.RemoveCartItem(item.productId).subscribe({
       next: (req: any) => {
-        console.log('Product Remove Successfully', req);
         this._cart.ShowCartItems(this.cartDetails.length);
         this.CalculateShipping();
       },
-      error: (err: any) => {
-        console.log('Product Remove failed', err);
-      },
+      error: (err: any) => {},
     });
   }
 
@@ -176,15 +164,11 @@ export class CartComponent implements OnInit, OnDestroy {
       if (hasNotFreeShipping) {
         this._address.GetCityShippingCost().subscribe({
           next: (req: any) => {
-            console.log('ShippingCost Suceessfully', req);
             this.shippingCost = req.data;
           },
-
-          error: (err) => console.log('ShippingCost Failed', err),
         });
       } else {
         this.shippingCost = 0;
-        console.log('ShippingCost 0');
       }
     } else {
       this.shippingCost = 50;

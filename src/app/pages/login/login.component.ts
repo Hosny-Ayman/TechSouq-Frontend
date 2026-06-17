@@ -3,7 +3,7 @@ import {
   OnInit,
   inject,
   PLATFORM_ID,
-  OnDestroy, // 👈 متنساش دي
+  OnDestroy,
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {

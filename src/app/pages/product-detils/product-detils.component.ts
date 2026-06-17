@@ -186,9 +186,7 @@ export class ProductDetilsComponent implements OnInit, OnDestroy {
           this.reviews = req.data.data || [];
           this.totalReviewPages = req.data.totalPages || 1;
         },
-        error: (err: any) => {
-          console.log('Failed to load reviews', err);
-        },
+        error: (err: any) => {},
       });
   }
 

@@ -1,0 +1,96 @@
+<div class="max-w-7xl mx-auto px-4 py-12">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+    <div class="space-y-8">
+      <div>
+        <h2 class="text-4xl font-extrabold text-gray-900 mb-4">Let's Talk!</h2>
+        <p class="text-gray-600 text-lg">
+          Have a question about a product or need help with your order? We're
+          here to help.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div
+          class="p-6 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 hover:shadow-md transition-shadow"
+        >
+          <div
+            class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center text-[#eb5e28]"
+          >
+            <i class="pi pi-phone text-xl"></i>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500 font-medium">Call Us</p>
+            <p class="text-gray-900 font-bold text-lg">01097476025</p>
+          </div>
+        </div>
+        <div
+          class="p-6 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 hover:shadow-md transition-shadow overflow-hidden"
+        >
+          <div
+            class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 shrink-0"
+          >
+            <i class="pi pi-envelope text-xl"></i>
+          </div>
+          <div class="truncate">
+            <p class="text-sm text-gray-500 font-medium">Email Us</p>
+            <p class="text-gray-900 font-bold text-sm truncate">
+              hosnyaymandev&#64;gmail.com
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-8 rounded-3xl shadow-lg border border-gray-100">
+        <div class="flex flex-col gap-5">
+          <input
+            pInputText
+            type="text"
+            [(ngModel)]="contactForm.name"
+            placeholder="Your Name"
+            class="w-full p-4 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-[#eb5e28] transition-all"
+          />
+          <input
+            pInputText
+            type="email"
+            [(ngModel)]="contactForm.email"
+            placeholder="Your Email"
+            class="w-full p-4 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-[#eb5e28] transition-all"
+          />
+          <textarea
+            pInputTextarea
+            rows="4"
+            [(ngModel)]="contactForm.message"
+            placeholder="How can we help you?"
+            class="w-full p-4 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-[#eb5e28] transition-all"
+          ></textarea>
+          <button
+            (click)="sendMessage()"
+            class="w-full bg-[#eb5e28] hover:bg-[#d65524] text-white rounded-xl py-4 font-bold text-lg transition-colors shadow-md"
+          >
+            Send Message
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="relative h-full min-h-[500px] md:min-h-[600px] rounded-3xl overflow-hidden shadow-2xl group"
+    >
+      <img
+        src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1000&auto=format&fit=crop"
+        alt="Contact TechSouq"
+        class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+      />
+      <div
+        class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"
+      ></div>
+      <div class="absolute bottom-8 left-8 right-8 text-white">
+        <h3 class="text-3xl font-bold mb-2">We love hearing from you</h3>
+        <p class="text-gray-200 text-lg">
+          Our support team is available 24/7 to assist you with any inquiries
+          regarding your tech needs.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

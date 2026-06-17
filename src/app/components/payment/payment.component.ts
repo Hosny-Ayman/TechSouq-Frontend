@@ -407,7 +407,6 @@ export class PaymentComponent implements OnInit, OnDestroy {
       if (hasNotFreeShipping && cityToCalculate) {
         this._address.GetCityShippingCost(cityToCalculate).subscribe({
           next: (req: any) => (this.shippingCost = req.data),
-          error: (err) => console.log('ShippingCost Failed', err),
         });
       } else {
         this.shippingCost = 0;

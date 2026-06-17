@@ -27,9 +27,7 @@ export class OrderSummarieComponent implements OnInit {
       next: (req: any) => {
         this.orders = req.data as IOrder[];
       },
-      error: (err: any) => {
-        console.log('Failed To Get Orders', err);
-      },
+      error: (err: any) => {},
     });
   }
 

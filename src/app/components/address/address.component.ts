@@ -34,11 +34,8 @@ export class AddressComponent implements OnInit {
   }
 
   setAsDefault(id: number) {
-    // debugger;
-
     this._address.SetAddresDefault(id).subscribe({
       next: (req: any) => {
-        console.log('Set Default Successfully', req);
         this.myallAddresses = this.myallAddresses.map((addr) => ({
           ...addr,
           active: addr.id === id,
@@ -46,7 +43,6 @@ export class AddressComponent implements OnInit {
         this._message.showSuccess('Address Default Successfully');
       },
       error: (err: any) => {
-        console.log('Set Default Failed', err);
         this._message.showSuccess('Address Default Failed');
       },
     });
@@ -55,15 +51,12 @@ export class AddressComponent implements OnInit {
   removeAddress(id: number) {
     this._address.RemoveAddress(id).subscribe({
       next: (req: any) => {
-        console.log('Set Remove Successfully', req);
-
         this.myallAddresses = this.myallAddresses.filter((x) => x.id !== id);
         this.GetAllAddresses();
 
         this._message.showSuccess('Address Removed Successfully');
       },
       error: (err: any) => {
-        console.log('Set Remove Failed', err);
         this._message.showSuccess('Address Removed Failed');
       },
     });
@@ -75,12 +68,10 @@ export class AddressComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (req: any) => {
-          console.log('get Adderess Successfully', req);
           let addresses = req.data;
 
           this.myallAddresses = addresses ? (addresses as IAddress[]) : [];
         },
-        error: (err: any) => console.log('get Adderess Failed', err),
       });
   }
 }

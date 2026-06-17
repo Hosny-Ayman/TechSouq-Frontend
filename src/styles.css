@@ -5,9 +5,8 @@
 @tailwind components;
 @tailwind utilities;
 
-/* إرجاع شكل النقط (Indicators) اللي مسحها Tailwind */
 .p-galleria-indicator button {
-  background-color: #dee2e6 !important; /* لون النقطة وهي مطفية (رمادي) */
+  background-color: #dee2e6 !important;
   width: 1rem !important;
   height: 1rem !important;
   border-radius: 50% !important;
@@ -18,12 +17,10 @@
     box-shadow 0.2s;
 }
 
-/* لون النقطة المحددة (Active) */
 .p-galleria-indicator.p-highlight button {
-  background-color: #3b82f6 !important; /* لون أزرق */
+  background-color: #3b82f6 !important;
 }
 
-/* إخفاء خلفية الزراير الافتراضية */
 button.p-link {
   background: transparent;
   border: none;

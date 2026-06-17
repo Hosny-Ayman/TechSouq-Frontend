@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { BadgeModule } from 'primeng/badge';
@@ -16,6 +16,8 @@ import {
 } from '../../../core/Interfaces/icart-items';
 import { ProductsService } from '../../../core/services/products.service';
 import { FormsModule } from '@angular/forms';
+import { UtilityService } from '../../../core/services/utility.service';
+import { SystemSettingService } from '../../../core/services/system-setting.service';
 
 @Component({
   selector: 'app-auth-nav',
@@ -35,6 +37,8 @@ import { FormsModule } from '@angular/forms';
 })
 export class AuthNavComponent {
   CartItems!: ICartItems[];
+  private _utilati = inject(UtilityService);
+  private _systemSettings = inject(SystemSettingService);
 
   searchWord: string = '';
 
@@ -43,6 +47,8 @@ export class AuthNavComponent {
   cartCount: number = 0;
 
   items: MenuItem[] | undefined;
+
+  mainImage: string = '';
 
   constructor(
     private _Products: ProductsService,
@@ -57,6 +63,8 @@ export class AuthNavComponent {
       { label: 'About', icon: 'pi pi-info-circle', routerLink: '/About' },
       { label: 'Sign Up', icon: 'pi pi-user', routerLink: '/Register' },
     ];
+
+    this.getmainImage();
 
     this.loadCart();
 
@@ -80,7 +88,6 @@ export class AuthNavComponent {
     if (this._auth.currentUser.value !== null) {
       this._cart.GetCartItems().subscribe({
         next: (res: any) => {
-          console.log('CartItem', res.data);
           this.CartItems = res.data;
           const count = res.data ? res.data.length : 0;
           this._cart.ShowCartItems(count);
@@ -90,6 +97,18 @@ export class AuthNavComponent {
       const cart = this._cart.getCartAnonymousCkient();
       this._cart.ShowCartItems(cart.length);
     }
+  }
+
+  loadImage(fileName: string, imagePath: string): string {
+    return this._utilati.getImageUrl(fileName, imagePath);
+  }
+
+  getmainImage() {
+    this._systemSettings.GetSystemSettingByKey('SiteLogo').subscribe({
+      next: (req: any) => {
+        this.mainImage = req.data.settingValue;
+      },
+    });
   }
 
   ngOnDestroy(): void {

@@ -47,14 +47,11 @@ export class ForgetPasswordComponent {
 
     this._auth.ForgotPassword(payload).subscribe({
       next: (req: any) => {
-        console.log('successfully forgetpassword');
-
         this.isLoading = false;
         this._message.showSuccess('Password reset link sent to your email.');
         this.startCooldown();
       },
       error: (err: any) => {
-        console.log('Failed forgetpassword', err);
         this.isLoading = false;
         this._message.showError('Failed to send reset link. Please try again.');
       },

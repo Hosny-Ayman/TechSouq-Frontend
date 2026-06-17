@@ -123,7 +123,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
         this._cart.addCartItem(cartItems).subscribe({
           next: (req: any) => {
-            console.log('addToCart', req);
             this._message.showSuccess('Product added To Cart Successfully');
 
             this.cartProductIds.add(product.id);
@@ -153,10 +152,8 @@ export class HomeComponent implements OnInit, OnDestroy {
               items.forEach((item: any) =>
                 this.cartProductIds.add(item.productId),
               );
-              console.log('loadCartIds Sucessfully', req);
             }
           },
-          error: (err: any) => console.log('loadCartIds Failed', err),
         });
     } else {
       if (this.isbrowser) {
@@ -208,7 +205,6 @@ export class HomeComponent implements OnInit, OnDestroy {
             });
           }
         },
-        error: (err) => console.log(err),
       });
   }
 
@@ -235,9 +231,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.currentCategoryPage = req.data.currentPage;
         this.totalCategoryPages = req.data.totalPages;
       },
-      error: (error: any) => {
-        console.log('Get allcategories Failed', error);
-      },
+      error: (error: any) => {},
     });
   }
 

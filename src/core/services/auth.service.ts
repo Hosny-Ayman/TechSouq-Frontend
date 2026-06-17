@@ -64,15 +64,13 @@ export class AuthService {
             this.currentUser.next(res.data);
 
             if (isPlatformBrowser(this.platformId)) {
-              const { id, ...UserWithOutId } = res.data;
+              const { ...UserWithOutId } = res.data;
               localStorage.setItem('userData', JSON.stringify(UserWithOutId));
 
               const cart = this.injected.get(CartService);
 
               return cart.AddCartItemsAfterLoginAndCLearLocalStorage().pipe(
                 catchError((err) => {
-                  console.log('Cart Merge Failed', err);
-
                   return of(null);
                 }),
 
@@ -99,9 +97,7 @@ export class AuthService {
 
           try {
             await this._socialAuthService.signOut(true);
-          } catch (e) {
-            console.log('Google already signed out');
-          }
+          } catch (e) {}
 
           this._router.navigate(['/Login']);
         }),
@@ -124,15 +120,12 @@ export class AuthService {
 
     this.login(formData).subscribe({
       next: (respons: any) => {
-        console.log('Register Successfuly', respons);
         this._MyMessage.showSuccess('Register Successfuly');
         this._ShowSpinner.hide();
 
         this._router.navigate(['/User']);
       },
       error: (err) => {
-        console.log('Login Failed', err);
-
         this._MyMessage.showError('Unexpected Error Try Again Later');
         this._ShowSpinner.hide();
       },
@@ -159,7 +152,6 @@ export class AuthService {
             const cart = this.injected.get(CartService);
             return cart.AddCartItemsAfterLoginAndCLearLocalStorage().pipe(
               catchError((err) => {
-                console.log('Cart Merge Failed', err);
                 return of(null);
               }),
               map(() => res),

@@ -1,18 +1,26 @@
-<div class="card">
-  <p-menubar [model]="items">
+<div
+  class="relative z-50 w-full bg-white/70 backdrop-blur-2xl border-b border-gray-200/50 shadow-[0_4px_30px_rgba(0,0,0,0.03)] font-sans antialiased"
+>
+  <p-menubar
+    [model]="items"
+    styleClass="border-none bg-transparent px-4 py-2 sm:px-6 lg:px-8 w-full"
+  >
     <ng-template pTemplate="start">
-      <a class="text-2xl font-bold text-[#ffa41c] ml-2" routerLink="/Auth"
-        >TechSouq</a
-      >
+      <img
+        [src]="loadImage('SiteImages', mainImage)"
+        alt="TechSouq"
+        routerLink="/Auth"
+        class="cursor-pointer h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain hover:scale-105 hover:drop-shadow-[0_8px_16px_rgba(255,164,28,0.25)] transition-all duration-500 ease-out"
+      />
     </ng-template>
 
     <ng-template pTemplate="end">
       <div
-        class="relative flex items-center justify-end gap-5 mr-4 w-full sm:w-[350px] md:w-[450px] lg:w-[550px]"
+        class="relative flex items-center justify-end gap-5 sm:gap-8 w-full sm:w-[400px] md:w-[500px] lg:w-[650px]"
       >
-        <div class="relative w-full">
+        <div class="relative w-full group">
           <i
-            class="pi pi-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg z-10"
+            class="pi pi-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-lg z-10 transition-colors duration-300 group-focus-within:text-[#ffa41c]"
           ></i>
           <input
             type="text"
@@ -21,21 +29,21 @@
             (ngModelChange)="onInputClear($event)"
             pInputText
             placeholder="What are you looking for..."
-            class="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-[#ffa41c] focus:border-transparent focus:bg-white transition-all duration-300 placeholder-gray-400"
+            class="w-full pl-14 pr-6 py-3.5 bg-gray-100/50 hover:bg-gray-100/80 border border-transparent text-gray-800 text-[15px] rounded-full focus:outline-none focus:bg-white focus:border-[#ffa41c]/30 focus:ring-4 focus:ring-[#ffa41c]/10 transition-all duration-300 placeholder:text-gray-400 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"
           />
         </div>
 
         <a
           routerLink="/Cart"
-          class="relative cursor-pointer group flex items-center"
+          class="relative flex items-center justify-center w-12 h-12 rounded-full bg-transparent hover:bg-orange-50 cursor-pointer group transition-all duration-300 active:scale-95 shrink-0"
         >
           <i
-            class="pi pi-shopping-cart text-2xl text-gray-700 group-hover:text-black transition-colors"
+            class="pi pi-shopping-cart text-[24px] text-gray-600 group-hover:text-[#ffa41c] transition-colors duration-300 transform group-hover:scale-105"
           ></i>
 
           @if (cartCount > 0) {
             <span
-              class="absolute -top-2 -right-3 bg-[#ffa41c] text-white text-[11px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-md"
+              class="absolute top-0 right-0 flex items-center justify-center min-w-[22px] h-[22px] px-1.5 bg-gradient-to-r from-[#ffa41c] to-[#ff8c00] text-white text-[11px] font-bold rounded-full border-2 border-white shadow-[0_4px_8px_rgba(255,164,28,0.4)] transform group-hover:-translate-y-1 group-hover:scale-110 transition-all duration-300"
             >
               {{ cartCount }}
             </span>

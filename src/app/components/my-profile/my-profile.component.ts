@@ -12,23 +12,56 @@ import { MessageModule } from 'primeng/message';
 import { MessagesService } from '../../../core/services/messages.service';
 import { IUserData } from '../../../core/Interfaces/IUser';
 
-export function passwordMatchValidator(control: AbstractControl) {
-  const newPassword = control.get('newPassword');
-  const confirmPassword = control.get('confirmPassword');
-
-  if (!newPassword || !confirmPassword) return null;
-
-  if (confirmPassword.errors && !confirmPassword.errors['passwordMismatch']) {
-    return null;
+function clearError(control: AbstractControl | null, errorName: string) {
+  if (control && control.hasError(errorName)) {
+    const errs = { ...control.errors };
+    delete errs[errorName];
+    control.setErrors(Object.keys(errs).length ? errs : null);
   }
+}
 
-  if (newPassword.value !== confirmPassword.value) {
-    confirmPassword.setErrors({ passwordMismatch: true });
-    return { passwordMismatch: true };
+export function passwordGroupValidator(group: AbstractControl) {
+  const currentPassword = group.get('currentPassword');
+  const newPassword = group.get('newPassword');
+  const confirmPassword = group.get('confirmPassword');
+
+  if (!currentPassword || !newPassword || !confirmPassword) return null;
+
+  const isChangingPassword =
+    currentPassword.value || newPassword.value || confirmPassword.value;
+
+  if (isChangingPassword) {
+    if (!currentPassword.value)
+      currentPassword.setErrors({ ...currentPassword.errors, required: true });
+    else clearError(currentPassword, 'required');
+
+    if (!newPassword.value)
+      newPassword.setErrors({ ...newPassword.errors, required: true });
+    else clearError(newPassword, 'required');
+
+    if (!confirmPassword.value)
+      confirmPassword.setErrors({ ...confirmPassword.errors, required: true });
+    else clearError(confirmPassword, 'required');
+
+    if (
+      newPassword.value &&
+      confirmPassword.value &&
+      newPassword.value !== confirmPassword.value
+    ) {
+      confirmPassword.setErrors({
+        ...confirmPassword.errors,
+        passwordMismatch: true,
+      });
+    } else {
+      clearError(confirmPassword, 'passwordMismatch');
+    }
   } else {
-    confirmPassword.setErrors(null);
-    return null;
+    clearError(currentPassword, 'required');
+    clearError(newPassword, 'required');
+    clearError(confirmPassword, 'required');
+    clearError(confirmPassword, 'passwordMismatch');
   }
+  return null;
 }
 
 @Component({
@@ -85,7 +118,7 @@ export class MyProfileComponent implements OnInit {
         ],
         confirmPassword: [''],
       },
-      { validators: passwordMatchValidator },
+      { validators: passwordGroupValidator },
     );
   }
 
@@ -128,20 +161,22 @@ export class MyProfileComponent implements OnInit {
     if (this.userData.valid && this.userData.dirty) {
       const formValues = this.userData.value;
 
-      const payload: IUserData = {
+      const payload: any = {
         id: this.user.id,
         roleId: this.user.roleId,
         firstName: formValues.FirstName,
         secondName: formValues.SecondName,
         email: formValues.email,
-        oldPassword: formValues.currentPassword,
-        newPassword: formValues.newPassword,
       };
+
+      if (formValues.newPassword) {
+        payload.oldPassword = formValues.currentPassword;
+        payload.newPassword = formValues.newPassword;
+      }
 
       if (this.user.id != 0) {
         this._user.updateUser(payload).subscribe({
           next: (req: any) => {
-            console.log('User Update Successfully', req);
             this._message.showSuccess('Profile updated successfully!');
 
             this.userData.reset({
@@ -152,7 +187,6 @@ export class MyProfileComponent implements OnInit {
             });
           },
           error: (err: any) => {
-            console.log('User Update Failed', err);
             this._message.showError(
               'Failed to update profile. Please try again.',
             );

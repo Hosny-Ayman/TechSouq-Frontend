@@ -63,6 +63,20 @@ export const routes: Routes = [
             (c) => c.ResetPasswordComponent,
           ),
       },
+
+      {
+        path: 'Contact',
+        loadComponent: () =>
+          import('./pages/contact/contact.component').then(
+            (c) => c.ContactComponent,
+          ),
+      },
+
+      {
+        path: 'About',
+        loadComponent: () =>
+          import('./pages/about/about.component').then((c) => c.AboutComponent),
+      },
     ],
   },
 
@@ -143,6 +157,18 @@ export const routes: Routes = [
           import('./pages/order-summarie/order-summarie.component').then(
             (c) => c.OrderSummarieComponent,
           ),
+      },
+      {
+        path: 'Contact',
+        loadComponent: () =>
+          import('./pages/contact/contact.component').then(
+            (c) => c.ContactComponent,
+          ),
+      },
+      {
+        path: 'About',
+        loadComponent: () =>
+          import('./pages/about/about.component').then((c) => c.AboutComponent),
       },
     ],
   },

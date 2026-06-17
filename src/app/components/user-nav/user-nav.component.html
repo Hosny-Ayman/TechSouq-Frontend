@@ -1,21 +1,23 @@
-<div class="card shadow-sm">
-  <p-menubar [model]="items" class="border-none">
+<div
+  class="sticky top-0 z-50 w-full bg-white/75 backdrop-blur-2xl border-b border-gray-100 shadow-[0_4px_40px_-10px_rgba(0,0,0,0.05)] font-sans antialiased transition-all duration-300"
+>
+  <p-menubar [model]="items" styleClass="border-none bg-transparent w-full">
     <ng-template pTemplate="start">
-      <a
-        class="text-2xl font-extrabold text-[#c7511f] ml-4 tracking-wide"
+      <img
+        [src]="loadImage('SiteImages', mainImage)"
+        alt="TechSouq"
         routerLink="/Auth"
-      >
-        TechSouq
-      </a>
+        class="cursor-pointer h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain hover:scale-105 hover:drop-shadow-[0_8px_16px_rgba(255,164,28,0.2)] transition-all duration-500 ease-out ml-2 lg:ml-4"
+      />
     </ng-template>
 
     <ng-template pTemplate="end">
       <div
-        class="relative flex items-center justify-end gap-5 mr-4 w-full sm:w-[350px] md:w-[450px] lg:w-[550px]"
+        class="relative flex items-center justify-end gap-5 sm:gap-6 mr-2 lg:mr-4 w-full sm:w-[350px] md:w-[450px] lg:w-[550px]"
       >
-        <div class="relative w-full">
+        <div class="relative w-full group">
           <i
-            class="pi pi-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg z-10"
+            class="pi pi-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-lg z-10 transition-colors duration-300 group-focus-within:text-[#ffa41c]"
           ></i>
           <input
             type="text"
@@ -24,47 +26,50 @@
             (input)="onInputClear()"
             pInputText
             placeholder="What are you looking for..."
-            class="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-gray-300 text-gray-800 text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-[#ffa41c] focus:border-transparent focus:bg-white transition-all duration-300 placeholder-gray-400"
+            class="w-full pl-14 pr-6 py-3.5 bg-gray-100/60 hover:bg-gray-100/90 border border-transparent text-gray-800 text-[15px] font-medium tracking-wide rounded-full focus:outline-none focus:bg-white focus:border-[#ffa41c]/40 focus:ring-4 focus:ring-[#ffa41c]/10 transition-all duration-300 placeholder:text-gray-400 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"
           />
         </div>
 
         <a
           routerLink="/Cart"
-          class="relative cursor-pointer group flex items-center mt-1"
+          class="relative flex items-center justify-center w-12 h-12 rounded-full bg-transparent hover:bg-orange-50/80 cursor-pointer group transition-all duration-300 active:scale-95 shrink-0"
         >
           <i
-            class="pi pi-shopping-cart text-2xl text-gray-700 group-hover:text-black transition-colors"
+            class="pi pi-shopping-cart text-[24px] text-gray-600 group-hover:text-[#ffa41c] transition-colors duration-300 transform group-hover:scale-105"
           ></i>
 
           @if (cartCount > 0) {
             <span
-              class="absolute -top-2 -right-3 bg-[#ffa41c] text-white text-[11px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-md animate-bounce-short"
+              class="absolute top-0 right-0 flex items-center justify-center min-w-[22px] h-[22px] px-1.5 bg-gradient-to-tr from-[#ffa41c] to-[#ff8c00] text-white text-[11px] font-bold rounded-full border-2 border-white shadow-[0_4px_10px_rgba(255,164,28,0.4)] transform group-hover:-translate-y-1 group-hover:scale-110 transition-all duration-300"
             >
               {{ cartCount }}
             </span>
           }
         </a>
 
-        <div class="relative group mt-1">
+        <div class="relative group shrink-0">
           <button
-            class="w-9 h-9 rounded-full bg-[#db4444] text-white flex items-center justify-center hover:bg-red-600 transition-all duration-300 shadow-md focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-2"
+            class="w-11 h-11 rounded-full bg-gradient-to-br from-[#db4444] to-[#ff2a2a] text-white flex items-center justify-center hover:shadow-[0_6px_20px_rgba(219,68,68,0.4)] hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-red-500/20 active:scale-95"
           >
-            <i class="pi pi-user text-lg"></i>
+            <i class="pi pi-user text-[19px]"></i>
           </button>
 
           <div
-            class="absolute right-0 top-full mt-3 w-56 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 overflow-hidden transform origin-top-right group-hover:scale-100 scale-95"
-            style="background: linear-gradient(145deg, #2b2b2b, #1a1a1a)"
+            class="absolute right-0 top-full mt-4 w-64 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.25)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-out z-50 overflow-hidden transform origin-top-right group-hover:scale-100 scale-95 border border-white/10 backdrop-blur-2xl bg-[#1a1a1a]/95"
           >
             <ul
-              class="flex flex-col text-gray-100 font-medium text-[14px] py-2"
+              class="flex flex-col text-gray-200 font-medium text-[14.5px] py-3"
             >
               <li>
                 <a
                   routerLink="/User/Profile"
-                  class="flex items-center gap-3 px-5 py-3 hover:bg-white/10 hover:pl-6 transition-all duration-300 cursor-pointer"
+                  class="flex items-center gap-4 px-6 py-3.5 hover:bg-white/5 hover:text-white transition-all duration-300 cursor-pointer group/item"
                 >
-                  <i class="pi pi-user text-xl font-light"></i>
+                  <div
+                    class="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center group-hover/item:bg-[#ffa41c]/20 group-hover/item:text-[#ffa41c] transition-colors shadow-inner"
+                  >
+                    <i class="pi pi-user text-lg font-light"></i>
+                  </div>
                   <span>Manage My Account</span>
                 </a>
               </li>
@@ -72,21 +77,31 @@
               <li>
                 <a
                   routerLink="/User/Order"
-                  class="flex items-center gap-3 px-5 py-3 hover:bg-white/10 hover:pl-6 transition-all duration-300 cursor-pointer"
+                  class="flex items-center gap-4 px-6 py-3.5 hover:bg-white/5 hover:text-white transition-all duration-300 cursor-pointer group/item"
                 >
-                  <i class="pi pi-box text-xl font-light"></i>
+                  <div
+                    class="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center group-hover/item:bg-[#ffa41c]/20 group-hover/item:text-[#ffa41c] transition-colors shadow-inner"
+                  >
+                    <i class="pi pi-box text-lg font-light"></i>
+                  </div>
                   <span>My Orders</span>
                 </a>
               </li>
 
-              <div class="h-px bg-gray-700 my-1 mx-4"></div>
+              <div
+                class="h-px bg-gradient-to-r from-transparent via-gray-700/60 to-transparent my-2 mx-4"
+              ></div>
 
               <li>
                 <a
                   (click)="logout()"
-                  class="flex items-center gap-3 px-5 py-3 hover:bg-red-500/20 text-gray-100 hover:text-red-400 hover:pl-6 transition-all duration-300 cursor-pointer"
+                  class="flex items-center gap-4 px-6 py-3.5 hover:bg-red-500/10 text-gray-300 hover:text-red-400 transition-all duration-300 cursor-pointer group/item"
                 >
-                  <i class="pi pi-sign-out text-xl font-light"></i>
+                  <div
+                    class="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center group-hover/item:bg-red-500/20 group-hover/item:text-red-400 transition-colors shadow-inner"
+                  >
+                    <i class="pi pi-sign-out text-lg font-light"></i>
+                  </div>
                   <span>Logout</span>
                 </a>
               </li>

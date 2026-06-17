@@ -1,4 +1,4 @@
-import { Component, inject, PLATFORM_ID } from '@angular/core';
+import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { BadgeModule } from 'primeng/badge';
@@ -13,6 +13,8 @@ import { ButtonModule } from 'primeng/button';
 import { AuthService } from '../../../core/services/auth.service';
 import { Subject, takeUntil } from 'rxjs';
 import { CartService } from '../../../core/services/cart.service';
+import { SystemSettingService } from '../../../core/services/system-setting.service';
+import { UtilityService } from '../../../core/services/utility.service';
 
 @Component({
   selector: 'app-user-nav',
@@ -31,7 +33,11 @@ import { CartService } from '../../../core/services/cart.service';
   templateUrl: './user-nav.component.html',
   styleUrl: './user-nav.component.css',
 })
-export class UserNavComponent {
+export class UserNavComponent implements OnInit {
+  private _utilati = inject(UtilityService);
+  private _systemSettings = inject(SystemSettingService);
+
+  mainImage: string = '';
   searchWord: string = '';
 
   private destroy$ = new Subject<void>();
@@ -54,6 +60,8 @@ export class UserNavComponent {
       { label: 'About', icon: 'pi pi-info-circle', routerLink: '/About' },
     ];
 
+    this.getmainImage();
+
     this.loadCart();
 
     this._cart.cart$.pipe(takeUntil(this.destroy$)).subscribe({
@@ -74,12 +82,8 @@ export class UserNavComponent {
   }
   logout() {
     this._auth.logout().subscribe({
-      next: (req: any) => {
-        console.log('Logout success', req);
-      },
-      error: (err: any) => {
-        console.log('Logout Failed', err);
-      },
+      next: (req: any) => {},
+      error: (err: any) => {},
     });
   }
 
@@ -87,7 +91,6 @@ export class UserNavComponent {
     if (this._auth.currentUser.value !== null) {
       this._cart.GetCartItems().subscribe({
         next: (res: any) => {
-          console.log('CartItem', res.data);
           const count = res.data ? res.data.length : 0;
           this._cart.ShowCartItems(count);
         },
@@ -96,6 +99,18 @@ export class UserNavComponent {
       const cart = this._cart.getCartAnonymousCkient();
       this._cart.ShowCartItems(cart.length);
     }
+  }
+
+  loadImage(fileName: string, imagePath: string): string {
+    return this._utilati.getImageUrl(fileName, imagePath);
+  }
+
+  getmainImage() {
+    this._systemSettings.GetSystemSettingByKey('SiteLogo').subscribe({
+      next: (req: any) => {
+        this.mainImage = req.data.settingValue;
+      },
+    });
   }
 
   ngOnDestroy(): void {

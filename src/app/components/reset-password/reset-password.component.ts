@@ -59,7 +59,6 @@ export class ResetPasswordComponent {
     );
   }
 
-  // Custom Validator للتأكد من تطابق الباسورد
   passwordMatchValidator(control: AbstractControl) {
     const password = control.get('newPassword');
     const confirmPassword = control.get('confirmPassword');

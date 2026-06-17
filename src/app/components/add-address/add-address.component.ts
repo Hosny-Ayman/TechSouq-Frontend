@@ -33,10 +33,8 @@ export class AddAddressComponent implements OnInit {
       if (this.addressId !== 0) {
         this._address.GetAddress(this.addressId).subscribe({
           next: (req: any) => {
-            console.log('get address Sucessfully to Edit', req);
             this.addressForm.patchValue(req.data);
           },
-          error: (err: any) => console.log('get address Failed to Edit', err),
         });
       }
     });
@@ -69,7 +67,6 @@ export class AddAddressComponent implements OnInit {
       next: (req: any) => {
         this.deliveryZones = req.data;
       },
-      error: (err: any) => console.log('Error loading delivery zones', err),
     });
   }
 
@@ -84,11 +81,9 @@ export class AddAddressComponent implements OnInit {
           next: (res) => {
             this._message.showSuccess('Address added successfully!');
             this._router.navigate(['/User/Profile/Address']);
-            console.log('Address added successfully!');
           },
           error: (err) => {
             this._message.showError(`${err.message}`);
-            console.log('Address added Failed!');
           },
         });
       } else {
@@ -101,7 +96,6 @@ export class AddAddressComponent implements OnInit {
           },
           error: (err) => {
             this._message.showError('Address Update Failed!');
-            console.log('Address Update Failed!');
           },
         });
       }

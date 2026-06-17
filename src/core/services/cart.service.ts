@@ -171,8 +171,6 @@ export class CartService {
     if (cart.length !== 0) {
       return this.addItems(cart).pipe(
         tap((req: any) => {
-          console.log('items added Successfully', req);
-
           localStorage.removeItem('cart');
         }),
       );
