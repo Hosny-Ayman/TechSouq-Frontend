@@ -16,7 +16,6 @@ import {
   of,
   catchError,
 } from 'rxjs';
-import { baseUrl } from '../apiRoot/baseUrl';
 import { ILogin, Iregister, IResetPassword } from '../Interfaces/http';
 import { Router } from '@angular/router';
 import { CartService } from './cart.service';
@@ -24,6 +23,7 @@ import { MessagesModule } from 'primeng/messages';
 import { MessagesService } from './messages.service';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { SocialAuthService } from '@abacritt/angularx-social-login';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -50,12 +50,12 @@ export class AuthService {
   }
 
   register(userData: Iregister): Observable<any> {
-    return this._http.post(`${baseUrl}Auth/Register`, userData);
+    return this._http.post(`${environment.apiUrl}Auth/Register`, userData);
   }
 
   login(userData: ILogin): Observable<any> {
     return this._http
-      .post(`${baseUrl}Auth/Login`, userData, {
+      .post(`${environment.apiUrl}Auth/Login`, userData, {
         withCredentials: true,
       })
       .pipe(
@@ -85,7 +85,7 @@ export class AuthService {
   }
   logout(): Observable<any> {
     return this._http
-      .post(`${baseUrl}Auth/Logout`, null, { withCredentials: true })
+      .post(`${environment.apiUrl}Auth/Logout`, null, { withCredentials: true })
       .pipe(
         tap(async () => {
           if (isPlatformBrowser(this.platformId)) {
@@ -106,7 +106,7 @@ export class AuthService {
 
   RefreshToken(): Observable<any> {
     return this._http.post(
-      `${baseUrl}Auth/RefreshToken`,
+      `${environment.apiUrl}Auth/RefreshToken`,
       {},
       { withCredentials: true },
     );
@@ -133,33 +133,35 @@ export class AuthService {
   }
 
   ForgotPassword(payload: any): Observable<any> {
-    return this._http.post(`${baseUrl}Auth/ForgotPassword`, payload);
+    return this._http.post(`${environment.apiUrl}Auth/ForgotPassword`, payload);
   }
 
   ResetPassword(data: IResetPassword): Observable<any> {
-    return this._http.post(`${baseUrl}Auth/ResetPassword`, data);
+    return this._http.post(`${environment.apiUrl}Auth/ResetPassword`, data);
   }
 
   GoogleLogin(idToken: any): Observable<any> {
-    return this._http.post(`${baseUrl}Auth/GoogleLogin`, idToken).pipe(
-      switchMap((res: any) => {
-        if (res.isSuccess && res.data) {
-          this.currentUser.next(res.data);
+    return this._http
+      .post(`${environment.apiUrl}Auth/GoogleLogin`, idToken)
+      .pipe(
+        switchMap((res: any) => {
+          if (res.isSuccess && res.data) {
+            this.currentUser.next(res.data);
 
-          if (isPlatformBrowser(this.platformId)) {
-            localStorage.setItem('userData', JSON.stringify(res.data));
+            if (isPlatformBrowser(this.platformId)) {
+              localStorage.setItem('userData', JSON.stringify(res.data));
 
-            const cart = this.injected.get(CartService);
-            return cart.AddCartItemsAfterLoginAndCLearLocalStorage().pipe(
-              catchError((err) => {
-                return of(null);
-              }),
-              map(() => res),
-            );
+              const cart = this.injected.get(CartService);
+              return cart.AddCartItemsAfterLoginAndCLearLocalStorage().pipe(
+                catchError((err) => {
+                  return of(null);
+                }),
+                map(() => res),
+              );
+            }
           }
-        }
-        return of(res);
-      }),
-    );
+          return of(res);
+        }),
+      );
   }
 }

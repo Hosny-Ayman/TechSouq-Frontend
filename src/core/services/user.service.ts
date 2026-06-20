@@ -3,7 +3,7 @@ import { IUserData } from '../Interfaces/IUser';
 import { Observable } from 'rxjs';
 import { UtilityService } from './utility.service';
 import { HttpClient } from '@angular/common/http';
-import { baseUrl } from '../apiRoot/baseUrl';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -32,6 +32,6 @@ export class UserService {
   }
 
   updateUser(userData: IUserData): Observable<any> {
-    return this._http.put(`${baseUrl}Users/Update`, userData);
+    return this._http.put(`${environment.apiUrl}Users/Update`, userData);
   }
 }

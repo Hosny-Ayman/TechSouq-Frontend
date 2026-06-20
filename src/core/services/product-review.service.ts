@@ -1,8 +1,8 @@
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { baseUrl } from '../apiRoot/baseUrl';
 import { Review } from '../Interfaces/IReview';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -11,11 +11,11 @@ export class ProductReviewService {
   constructor(private _http: HttpClient) {}
 
   CanUserReviewProduct(productId: number): Observable<any> {
-    return this._http.get(`${baseUrl}ProductReviews/${productId}`);
+    return this._http.get(`${environment.apiUrl}ProductReviews/${productId}`);
   }
 
   AddReview(review: Review): Observable<any> {
-    return this._http.post(`${baseUrl}ProductReviews`, review);
+    return this._http.post(`${environment.apiUrl}ProductReviews`, review);
   }
 
   GetAllReviews(
@@ -24,17 +24,17 @@ export class ProductReviewService {
     productId: number,
   ): Observable<any> {
     return this._http.get(
-      `${baseUrl}ProductReviews/GetAllReviewsPaged?pageNumber=${pageNumber}&pageSize=${pageSize}&productId=${productId}`,
+      `${environment.apiUrl}ProductReviews/GetAllReviewsPaged?pageNumber=${pageNumber}&pageSize=${pageSize}&productId=${productId}`,
     );
   }
 
   CanUserEditHisReview(productId: number): Observable<any> {
     return this._http.get(
-      `${baseUrl}ProductReviews/CanUserEditHisReview?productId=${productId}`,
+      `${environment.apiUrl}ProductReviews/CanUserEditHisReview?productId=${productId}`,
     );
   }
 
   UpdateReview(review: Review): Observable<any> {
-    return this._http.put(`${baseUrl}ProductReviews`, review);
+    return this._http.put(`${environment.apiUrl}ProductReviews`, review);
   }
 }

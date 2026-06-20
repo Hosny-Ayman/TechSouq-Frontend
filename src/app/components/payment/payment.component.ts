@@ -254,7 +254,6 @@ export class PaymentComponent implements OnInit, OnDestroy {
           this._message.showError(this.errorMessage);
         } else {
           if (result.paymentIntent?.status === 'succeeded') {
-            this._message.showSuccess('ألف مبروك! الدفع تم بنجاح.');
             this.isProcessing = true;
             setTimeout(() => {
               this.isProcessing = false;

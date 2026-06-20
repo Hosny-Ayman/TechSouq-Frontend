@@ -1,8 +1,8 @@
-import { baseUrl } from './../apiRoot/baseUrl';
 import { IProducts, Product } from './../Interfaces/IProducts';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -33,13 +33,18 @@ export class ProductsService {
       params.Catogrie = Catogrie;
     }
 
-    return this._httpClient.get(`${baseUrl}Products/GetProductsPaged`, {
-      params: params,
-    });
+    return this._httpClient.get(
+      `${environment.apiUrl}Products/GetProductsPaged`,
+      {
+        params: params,
+      },
+    );
   }
 
   public GetProductById(id: number): Observable<any> {
-    return this._httpClient.get(`${baseUrl}Products/Get?productId=${id}`);
+    return this._httpClient.get(
+      `${environment.apiUrl}Products/Get?productId=${id}`,
+    );
   }
 
   public hasDiscount(product: Product): boolean {

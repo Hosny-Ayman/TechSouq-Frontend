@@ -6,10 +6,10 @@ import {
   Items,
 } from '../Interfaces/icart-items';
 import { BehaviorSubject, Observable, of, Subject, tap } from 'rxjs';
-import { baseUrl } from '../apiRoot/baseUrl';
 import { AuthService } from './auth.service';
 import { isPlatformBrowser } from '@angular/common';
 import { UtilityService } from './utility.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -47,7 +47,10 @@ export class CartService {
 
   addCartItem(CartItem: ICartItems): Observable<any> {
     if (this._auth.currentUser.value !== null) {
-      return this._http.post(`${baseUrl}CartItems/AddItem`, CartItem);
+      return this._http.post(
+        `${environment.apiUrl}CartItems/AddItem`,
+        CartItem,
+      );
     }
 
     if (!this.isbrowser) {
@@ -84,7 +87,10 @@ export class CartService {
 
   UpdateCart(CartItem: Items[]): Observable<any> {
     if (this._auth.currentUser.value !== null) {
-      return this._http.put(`${baseUrl}CartItems/UpdateItem`, CartItem);
+      return this._http.put(
+        `${environment.apiUrl}CartItems/UpdateItem`,
+        CartItem,
+      );
     }
 
     if (!this.isbrowser) {
@@ -116,7 +122,7 @@ export class CartService {
 
   RemoveCartItem(ProductId: number): Observable<any> {
     if (this._auth.currentUser.value !== null) {
-      return this._http.delete(`${baseUrl}CartItems/RemoveItem`, {
+      return this._http.delete(`${environment.apiUrl}CartItems/RemoveItem`, {
         params: { ProductId: ProductId },
       });
     }
@@ -132,7 +138,7 @@ export class CartService {
 
   GetCartItems(): Observable<any> {
     if (this._auth.currentUser.value !== null) {
-      return this._http.get(`${baseUrl}CartItems/Get`);
+      return this._http.get(`${environment.apiUrl}CartItems/Get`);
     }
 
     if (!this.isbrowser) {
@@ -150,17 +156,19 @@ export class CartService {
   }
 
   GetCartLoginClient(productId: number): Observable<any> {
-    return this._http.get(`${baseUrl}Carts/Get`, {
+    return this._http.get(`${environment.apiUrl}Carts/Get`, {
       params: { productId: productId },
     });
   }
 
   GetCartItemsAndProductsDetails(): Observable<any> {
-    return this._http.get(`${baseUrl}CartItems/GetCartItemesWithProducts`);
+    return this._http.get(
+      `${environment.apiUrl}CartItems/GetCartItemesWithProducts`,
+    );
   }
 
   addItems(Items: ICartItems[]): Observable<any> {
-    return this._http.post(`${baseUrl}CartItems/AddItems`, Items);
+    return this._http.post(`${environment.apiUrl}CartItems/AddItems`, Items);
   }
 
   AddCartItemsAfterLoginAndCLearLocalStorage(): Observable<any> {
